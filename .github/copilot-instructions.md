@@ -6,14 +6,14 @@ Konnektr Docs is the **central portal for all user-facing documentation, guides,
 
 **Technology Stack & Folder Structure:**
 
-- Frontend: React + TypeScript + Vite + shadcn/ui + Tailwind CSS (located in `/frontend`)
+- Frontend: React + TypeScript + React Router + Fumadocs-UI + shadcn/ui + Tailwind CSS (located in `/app`)
 - Content: MDX files for product docs, guides, and API references (located in `/content`)
+- Build System: React Router with SSR enabled for static site generation
 - Live Demos: React components embedded in MDX
 - Deployment: Static hosting/CDN (docs.konnektr.com)
 - Integration: Automated PRs from product repos merge docs into the site
 
 ## 📋 Core Instructions for GitHub Copilot
-
 ### 1. Maintain These Instructions
 
 - Always keep this file and `.github/DEVELOPMENT_PLAN.md` up to date
@@ -25,26 +25,42 @@ Konnektr Docs is the **central portal for all user-facing documentation, guides,
 ### 2. Scope Adherence
 
 - This is a **documentation site only**. Refer to `.github/PLATFORM_SCOPE.md` for boundaries:
-  - ✅ **In Scope:** Interactive, searchable docs for all products, API references, guides, live demos, consistent branding/design
+  - ✅ **In Scope:** Interactive, searchable docs for all products, API references, guides, live demos, consistent branding/design, technical landing page with product overview
   - ❌ **Out of Scope:** Marketing, sales, lead generation, product business logic, backend integration, user authentication
+- Landing page should be technical and navigation-focused, not marketing-focused (marketing is handled by Konnektr Home)
 - All links to platform functionality must redirect to appropriate Konnektr applications
 - No direct knowledge of other product's databases or internal business logic
 
 ### 3. Architecture Principles
 
-#### Frontend (React + TypeScript)
+#### Frontend (React + TypeScript + Fumadocs)
 
-- All frontend code is located in `/frontend`
+- All frontend code is located in `/app` (React Router convention)
 - Use strict TypeScript, no `any` types
 - Component-based architecture with clear separation of concerns
-- Feature-based folder structure in `/frontend/src`
+- React Router with SSR enabled for static site generation
+- Fumadocs-UI components for docs layout and navigation
+- Sidebar tabs for product navigation (similar to ktrlplane project switcher)
 - Responsive design, mobile-first
 - Use shadcn/ui components for design system alignment
+- Align UI with ktrlplane design patterns (sidebar, theme switcher, branding)
+
+#### ⚠️ MDX Import & Curly Braces Warning
+
+- **Do NOT import React components directly in MDX files.**
+  - Instead, register components globally via `mdx-components.tsx` and use them by name in MDX.
+  - Direct imports (e.g. `import { Tabs, Tab } from 'fumadocs-ui/components/tabs';`) will break SSR/static export and cause runtime errors.
+- **Curly braces (`{}`) in MDX are interpreted as JSX.**
+  - Avoid using curly braces for non-JSX content (e.g. endpoint paths, code samples) to prevent parsing errors.
+  - For literal curly braces, escape them or use code blocks.
+  - Example: Use <code>GET /models/&#123;id&#125;</code> or fenced code blocks for API paths.
 
 #### Content (MDX + React)
 
 - All docs content is in `/content` as MDX files
-- Organize content by product, guides, reference, and API docs
+- Organize content by product: Graph, Flow, Assembler, Compass
+- Landing page provides technical overview and navigation to all products
+- Use sidebar tabs for product-specific navigation
 - Embed live React components for interactive demos
 - Automated PRs from product repos merge docs into the site
 
@@ -70,7 +86,8 @@ Konnektr Docs is the **central portal for all user-facing documentation, guides,
 2. Understand the documentation scope and user journey
 3. Plan before implementing (use manage_todo_list for complex tasks)
 4. Consider SEO and accessibility implications
-5. Use `/frontend` for all site code and `/content` for docs
+5. Use `/app` for all site code and `/content` for docs
+6. Customize Fumadocs theme to match Konnektr Design System
 
 #### Code Quality Standards
 
@@ -92,6 +109,9 @@ Konnektr Docs is the **central portal for all user-facing documentation, guides,
 
 - Use OKLCH color space exclusively
 - Define colors in CSS custom properties, never hardcode hex/rgb values
+- Customize Fumadocs theme to match Konnektr Design System
+- Align sidebar, theme switcher, and branding with ktrlplane patterns
+- Use Konnektr brand colors and typography consistently
 
 ### 6. Integration with Product Repos
 

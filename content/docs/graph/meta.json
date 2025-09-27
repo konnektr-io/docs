@@ -1,0 +1,6 @@
+{
+    "title": "Konnektr Graph",
+    "icon": "Database",
+    "description": "High-performance, ADT-compatible digital twin runtime and graph database",
+    "root": true
+}

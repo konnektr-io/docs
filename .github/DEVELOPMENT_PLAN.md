@@ -8,28 +8,34 @@ Konnektr Docs is the **central portal for all user-facing documentation, guides,
 
 ### ✅ Completed Infrastructure
 
-- [x] React + TypeScript + Vite foundation
+- [x] React + TypeScript + React Router foundation with SSR
+- [x] Fumadocs-UI components and layouts (DocsLayout, HomeLayout)
 - [x] shadcn/ui component library integration
-- [x] Tailwind CSS styling system
-- [x] Basic docs homepage structure
+- [x] Tailwind CSS styling system with OKLCH color space
+- [x] MDX content parsing and rendering
+- [x] Folder-based navigation from /content structure
+- [x] Search functionality with Fumadocs
 - [x] Initial responsive design implementation
-- [x] Navigation and routing for docs sections
 
 ### 🔄 Current State Analysis
 
-- Homepage with product documentation overview
-- Product-specific sections (Graph, Flow, Assembler, Compass)
+- Fumadocs-UI setup with React Router SSR enabled
+- Home page and docs layout implemented
+- MDX content in /content/docs with frontmatter support
+- Search functionality integrated
+- Basic theme and styling with Fumadocs defaults
 - Mobile-responsive design foundation
-- Dark theme implementation with brand colors
-- Automated PRs from product repos (planned)
+- Ready for customization to match Konnektr Design System
 
 ## 📋 Immediate Priorities
 
+- [ ] Create technical landing page with product overview and navigation (not marketing-focused)
+- [ ] Implement sidebar tabs for product navigation (similar to ktrlplane project switcher)
+- [ ] Customize Fumadocs theme to match Konnektr Design System (OKLCH colors, typography)
+- [ ] Align sidebar, theme switcher, and navigation with ktrlplane UI patterns
+- [ ] Add Konnektr branding (logo, colors, fonts) to match platform consistency
 - [ ] Integrate existing Graph documentation (from product repo)
-- [ ] Integrate Fumadocs (core/headless) for MDX/Markdown parsing, static site generation, and folder-based navigation
-- [ ] Set up `/content` folder with folder-structured navigation and frontmatter support
-- [ ] Use React Router for SPA navigation (recommended for Vite compatibility)
-- [ ] Align all UI with shadcn/ui components and Konnektr Design System
+- [ ] Organize content by product: Graph, Flow, Assembler, Compass
 - [ ] Develop robust API documentation (reference, guides, live examples, OpenAPI integration)
 - [ ] Enable automated PR workflow for product doc updates
 - [ ] Ensure SEO optimization and accessibility improvements
@@ -37,17 +43,24 @@ Konnektr Docs is the **central portal for all user-facing documentation, guides,
 
 ## 🏗️ Technology Architecture
 
-- **Frontend**: React 18+ with TypeScript (located in `/frontend`)
-- **Build System**: Vite for fast development and optimized builds, with static export
-- **Routing**: React Router (recommended for Fumadocs + Vite)
-- **UI Framework**: shadcn/ui components with Radix UI primitives
-- **Styling**: Tailwind CSS with OKLCH color space
+- **Frontend**: React 18+ with TypeScript (located in `/app`)
+- **Build System**: React Router with SSR enabled for static site generation
+- **Routing**: React Router with file-based routing
+- **UI Framework**: Fumadocs-UI components + shadcn/ui components with Radix UI primitives
+- **Styling**: Tailwind CSS with OKLCH color space, customized to match Konnektr Design System
 - **Content**: MDX/Markdown files for docs, guides, API references (located in `/content`), with frontmatter support
-- **Docs Engine**: Fumadocs (core/headless) for parsing, navigation, and static generation
+- **Docs Engine**: Fumadocs-UI for layouts, navigation, search, and rendering
 - **Integration**: Automated PRs from product repos for doc updates
-- **Deployment**: Static hosting/CDN for frontend
+- **Deployment**: Static hosting/CDN via React Router prerendering
 
 ## 📝 Content Strategy & User Experience
+
+### Landing Page & Product Navigation Strategy
+
+- Create technical landing page that provides overview of all products with documentation
+- Focus on navigation and product discovery, not marketing (marketing handled by Konnektr Home)
+- Guide users to specific product documentation sections
+- Implement sidebar tabs for switching between products (similar to ktrlplane project switcher)
 
 ### Product Documentation Integration & Navigation
 
@@ -58,11 +71,15 @@ Konnektr Docs is the **central portal for all user-facing documentation, guides,
 - Ensure technical accuracy and consistency
 - Embed live React components for interactive demos using shadcn/ui
 
-### Fumadocs Integration
+### Fumadocs UI Customization & ktrlplane Alignment
 
-- Integrate Fumadocs (core/headless) for MDX/Markdown parsing, navigation, and static site generation
-- Use React Router for routing
-- Customize Fumadocs theme to match Konnektr Design System
+- Customize Fumadocs theme using CSS variables and component overrides
+- Implement sidebar tabs for product navigation (similar to ktrlplane project switcher)
+- Align sidebar design and behavior with ktrlplane patterns
+- Integrate Konnektr branding (logo, typography, colors)
+- Match theme switcher implementation from ktrlplane (ModeToggle component)
+- Ensure consistent navigation and header patterns across platform
+- Use OKLCH color space for all custom styling
 
 ### API Documentation
 
@@ -93,8 +110,9 @@ Konnektr Docs is the **central portal for all user-facing documentation, guides,
 
 ## 🚀 Roadmap
 
+- [ ] Customize Fumadocs theme to match Konnektr Design System (Q4 2025)
+- [ ] Align UI with ktrlplane patterns (sidebar, theme switcher, branding) (Q4 2025)
 - [ ] Integrate Graph documentation (Q4 2025)
-- [ ] Integrate Fumadocs for static site generation and navigation (Q4 2025)
 - [ ] Launch API documentation with live examples and OpenAPI integration (Q4 2025)
 - [ ] Enable automated PR workflow for product doc updates (Q4 2025)
 - [ ] Expand docs for Flow, Assembler, Compass (Q1 2026)
