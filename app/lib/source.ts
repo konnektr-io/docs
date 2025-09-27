@@ -1,7 +1,16 @@
 import { loader } from 'fumadocs-core/source';
-import { create, docs } from '../../source.generated';
+import { icons } from "lucide-react";
+import { createElement } from "react";
+import { create, docs } from "../../source.generated";
 
 export const source = loader({
   source: await create.sourceAsync(docs.doc, docs.meta),
-  baseUrl: '/docs',
+  baseUrl: "/docs",
+  icon(icon) {
+    if (!icon) {
+      // You may set a default icon
+      return;
+    }
+    if (icon in icons) return createElement(icons[icon as keyof typeof icons]);
+  },
 });
