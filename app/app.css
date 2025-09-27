@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@import 'fumadocs-ui/css/shadcn.css';
-@import 'fumadocs-ui/css/preset.css';
+@import "fumadocs-ui/css/shadcn.css";
+@import "fumadocs-ui/css/preset.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -14,8 +14,8 @@
   --popover-foreground: oklch(0.15 0.01 240);
   --primary: oklch(0.35 0.08 240);
   --primary-foreground: oklch(0.98 0.001 240);
-  --secondary: oklch(0.55 0.12 180);
-  --secondary-foreground: oklch(0.98 0.001 240);
+  --secondary: var(--background);
+  --secondary-foreground: var(--foreground);
   --muted: oklch(0.96 0.005 240);
   --muted-foreground: oklch(0.47 0.01 240);
   --accent: oklch(0.96 0.005 240);
@@ -57,9 +57,9 @@
   --primary: oklch(0.65 0.12 180);
   /* Lighter secondary color for dark mode */
   --primary-foreground: oklch(0.12 0.02 240);
-  --secondary: oklch(0.45 0.08 240);
-  /* Lighter primary color for dark mode */
-  --secondary-foreground: oklch(0.985 0 0);
+  --secondary: var(--background);
+  /* Neutral secondary color for dark mode */
+  --secondary-foreground: var(--foreground);
   --muted: oklch(0.2 0.02 240);
   --muted-foreground: oklch(0.7 0.01 240);
   --accent: oklch(0.2 0.02 240);
@@ -121,8 +121,8 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--background);
+  --color-secondary-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
@@ -162,8 +162,8 @@
   --color-fd-border: var(--border);
   --color-fd-primary: var(--primary);
   --color-fd-primary-foreground: var(--primary-foreground);
-  --color-fd-secondary: var(--secondary);
-  --color-fd-secondary-foreground: var(--secondary-foreground);
+  --color-fd-secondary: var(--background);
+  --color-fd-secondary-foreground: var(--foreground);
   --color-fd-accent: var(--accent);
   --color-fd-accent-foreground: var(--accent-foreground);
   --color-fd-ring: var(--ring);

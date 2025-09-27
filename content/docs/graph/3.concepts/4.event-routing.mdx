@@ -34,26 +34,22 @@ Published through PostgreSQL NOTIFY/LISTEN (real-time, ephemeral):
 
 The event system uses a dual approach for optimal performance:
 
-```
-┌─────────────────────────┐    ┌─────────────────┐    ┌────────────────────┐
-│ Lifecycle Events        │───▶│   Shared        │◀───│  Telemetry Events  │
-│ (Logical Replication)   │    │   Event Queue   │    │ (NOTIFY/LISTEN)    │
-└─────────────────────────┘    └─────────────────┘    └────────────────────┘
-                                        │
-                                        ▼
-                               ┌─────────────────┐
-                               │ Event Consumer  │
-                               │ (Batch Process) │
-                               └─────────────────┘
-                                        │
-                                        ▼
-                          ┌─────────────────────────────────┐
-                          │         Event Sinks             │
-                          │  ┌─────────┐ ┌─────────┐ ┌─────────┐ │
-                          │  │  Kafka  │ │  Kusto  │ │  MQTT   │ │
-                          │  └─────────┘ └─────────┘ └─────────┘ │
-                          └─────────────────────────────────┘
-```
+<Mermaid chart="
+flowchart TD;
+  A[Lifecycle Events<br/>(Logical Replication)];
+  B[Shared Event Queue];
+  C[Telemetry Events<br/>(NOTIFY/LISTEN)];
+  D[Event Consumer<br/>(Batch Process)];
+  subgraph E [Event Sinks]
+    F[Kafka];
+    G[Kusto];
+    H[MQTT];
+  end
+  A --> B;
+  C --> B;
+  B --> D;
+  D --> E;" />
+
 
 This architecture ensures:
 - **Lifecycle events** are durable and never lost (important for maintaining state consistency)
