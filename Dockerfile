@@ -55,6 +55,5 @@ USER reactrouter
 
 EXPOSE 8080
 
-# Start the React Router SSR server on port 8080 (use PORT env or default to 8080)
-ENV PORT=8080
-CMD ["node", "build/server/index.js"]
+# Start the React Router SSR server (Cloud Run will inject $PORT)
+CMD ["pnpm", "run", "start"]

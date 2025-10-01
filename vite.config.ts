@@ -8,9 +8,7 @@ import * as MdxConfig from "./source.config";
 export default defineConfig({
   plugins: [mdx(MdxConfig), tailwindcss(), reactRouter(), tsconfigPaths()],
   server: {
-    port: 8080,
+    port: 8080, // Only for local dev
   },
-  preview: {
-    port: 8080,
-  },
+  // Do not set preview port, let it use default or $PORT
 });
