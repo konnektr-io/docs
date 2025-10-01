@@ -10,12 +10,13 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
 
 jobs:
-  build-frontend:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
