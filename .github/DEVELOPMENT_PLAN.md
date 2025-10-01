@@ -9,37 +9,54 @@ Konnektr Docs is the **central portal for all user-facing documentation, guides,
 ### ✅ Completed Infrastructure
 
 - [x] React + TypeScript + React Router foundation with SSR
-- [x] Fumadocs-UI components and layouts (DocsLayout, HomeLayout)
-- [x] shadcn/ui component library integration
+- [x] Custom DocsLayout and HomeLayout (replacing Fumadocs defaults)
+- [x] shadcn/ui component library integration with SidebarProvider
 - [x] Tailwind CSS styling system with OKLCH color space
 - [x] MDX content parsing and rendering
-- [x] Folder-based navigation from /content structure
-- [x] Search functionality with Fumadocs
-- [x] Initial responsive design implementation
+- [x] Folder-based navigation from /content structure with correct PageTree types
+- [x] TreeContextProvider integration for Fumadocs component compatibility
+- [x] ModeToggle component with useTheme from next-themes and ktrlplane styling
+- [x] Basic DocsSidebarContent with functional PageTree rendering
 
 ### 🔄 Current State Analysis
 
-- Fumadocs-UI setup with React Router SSR enabled
-- Home page and docs layout implemented
-- MDX content in /content/docs with frontmatter support
-- Search functionality integrated
-- Basic theme and styling with Fumadocs defaults
-- Mobile-responsive design foundation
-- Ready for customization to match Konnektr Design System
+- Custom layouts functional but need comprehensive UI/UX improvements
+- PageTree rendering works with correct node types ('page', 'folder', 'separator') and 'name' property
+- TreeContextProvider resolves Fumadocs component compatibility issues
+- ModeToggle updated with proper theme logic and ktrlplane button styling
+- All components compile without errors
+- Ready for systematic UI alignment with ktrlplane design patterns
 
-## 📋 Immediate Priorities
+### 🚨 Identified Issues Requiring Immediate Attention
 
+- **Missing Branding**: No Konnektr logo or link to marketing site in headers
+- **Inconsistent Header Heights**: Headers don't match ktrlplane 64px standard
+- **Missing Search Integration**: Fumadocs search component not integrated in headers
+- **Missing Breadcrumbs**: No navigation context breadcrumbs in layouts
+- **Poor Sidebar Structure**: No product tabs, improper tree indentation patterns
+- **Broken TOC**: No "On this page" table of contents component implemented
+- **Inadequate Mobile Navigation**: Missing mobile sidebar triggers and responsive behavior
+
+## 📋 Immediate Priorities - UI/UX Alignment Phase
+
+### Phase 1: Critical UI/UX Fixes (In Progress)
+- [ ] **Fix HomeLayout**: Add Konnektr logo and link to marketing site (konnektr.io)
+- [ ] **Enhance DocsLayout**: Consistent header height (64px), Fumadocs search integration, breadcrumbs component, mobile navigation trigger
+- [ ] **Rebuild Sidebar**: Implement Fumadocs SidebarTabs for product switching, proper tree structure using SidebarGroup/SidebarGroupLabel
+- [ ] **Create TOC Component**: Implement clickable "On this page" TOC using Fumadocs utilities and shadcn-ui active item tracking patterns
+- [ ] **Mobile Navigation**: Test and validate responsive sidebar behavior, navigation triggers, and touch interfaces
+
+### Phase 2: Content & Functionality
 - [ ] Create technical landing page with product overview and navigation (not marketing-focused)
-- [ ] Implement sidebar tabs for product navigation (similar to ktrlplane project switcher)
-- [ ] Customize Fumadocs theme to match Konnektr Design System (OKLCH colors, typography)
-- [ ] Align sidebar, theme switcher, and navigation with ktrlplane UI patterns
-- [ ] Add Konnektr branding (logo, colors, fonts) to match platform consistency
 - [ ] Integrate existing Graph documentation (from product repo)
 - [ ] Organize content by product: Graph, Flow, Assembler, Compass
 - [ ] Develop robust API documentation (reference, guides, live examples, OpenAPI integration)
 - [ ] Enable automated PR workflow for product doc updates
+
+### Phase 3: Polish & Optimization
 - [ ] Ensure SEO optimization and accessibility improvements
 - [ ] Implement versioning for major product releases
+- [ ] Performance optimization and bundle size management
 
 ## 🏗️ Technology Architecture
 
