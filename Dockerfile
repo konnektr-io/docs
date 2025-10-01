@@ -53,7 +53,8 @@ RUN addgroup -g 1001 -S nodejs && \
 
 USER reactrouter
 
-EXPOSE 3000
+EXPOSE 8080
 
-# Start the React Router SSR server
+# Start the React Router SSR server on port 8080 (use PORT env or default to 8080)
+ENV PORT=8080
 CMD ["node", "build/server/index.js"]
