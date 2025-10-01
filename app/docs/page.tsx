@@ -1,5 +1,6 @@
 import type { Route } from "./+types/page";
-import { DocsLayout } from "fumadocs-ui/layouts/notebook";
+// import { DocsLayout } from "fumadocs-ui/layouts/notebook";
+import DocsLayout from "../components/layout/DocsLayout";
 import {
   DocsBody,
   DocsDescription,
@@ -28,7 +29,21 @@ const renderer = toClientRenderer(
   docs.doc,
   ({ toc, default: Mdx, frontmatter }) => {
     return (
-      <DocsPage toc={toc}>
+      <DocsPage
+        toc={toc}
+        breadcrumb={{ enabled: false }}
+        tableOfContent={{ enabled: false }}
+        tableOfContentPopover={{ enabled: false }}
+        /* tableOfContent={{
+          enabled: true,
+          component: undefined, // Use default component
+          style: "normal", // Use normal style instead of clerk
+        }} */
+        /* tableOfContentPopover={{
+          enabled: true,
+          component: undefined, // Use default component
+        }} */
+      >
         <title>{frontmatter.title}</title>
         <meta name="description" content={frontmatter.description} />
         <DocsTitle>{frontmatter.title}</DocsTitle>

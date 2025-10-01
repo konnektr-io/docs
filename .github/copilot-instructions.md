@@ -45,8 +45,9 @@ Konnektr Docs is the **central portal for all user-facing documentation, guides,
 - Use shadcn/ui components for design system alignment
 - Align UI with ktrlplane design patterns (sidebar, theme switcher, branding)
 
-#### ⚠️ MDX Import & Curly Braces Warning
+#### ⚠️ Critical Implementation Warnings
 
+**MDX Import & Curly Braces:**
 - **Do NOT import React components directly in MDX files.**
   - Instead, register components globally via `mdx-components.tsx` and use them by name in MDX.
   - Direct imports (e.g. `import { Tabs, Tab } from 'fumadocs-ui/components/tabs';`) will break SSR/static export and cause runtime errors.
@@ -54,6 +55,13 @@ Konnektr Docs is the **central portal for all user-facing documentation, guides,
   - Avoid using curly braces for non-JSX content (e.g. endpoint paths, code samples) to prevent parsing errors.
   - For literal curly braces, escape them or use code blocks.
   - Example: Use <code>GET /models/&#123;id&#125;</code> or fenced code blocks for API paths.
+
+**Fumadocs Integration Requirements:**
+- Always wrap custom layouts with TreeContextProvider for Fumadocs component compatibility
+- PageTree nodes use 'name' property (not 'title') and types: 'page', 'folder', 'separator'
+- Use SidebarProvider from shadcn/ui for sidebar state management
+- Import Fumadocs components (Search, Breadcrumb, TOC) individually, not from layout packages
+- Theme management must use useTheme from next-themes (not Fumadocs theme utilities)
 
 #### Content (MDX + React)
 
@@ -66,6 +74,48 @@ Konnektr Docs is the **central portal for all user-facing documentation, guides,
 
 #### UI/UX Guidelines
 
+**Custom Layout Implementation Requirements:**
+- Use custom DocsLayout and HomeLayout (don't use Fumadocs default layouts)
+- Integrate Fumadocs components (search, breadcrumbs, TOC) into custom layouts
+- Maintain TreeContextProvider for Fumadocs component compatibility
+- Align with ktrlplane design patterns while preserving Fumadocs functionality
+
+**Header Requirements:**
+- Consistent header height across all layouts (match ktrlplane header at 64px)
+- Include Konnektr logo with link to marketing site (konnektr.io)
+- Integrate Fumadocs search component with proper theming
+- Add breadcrumbs component for navigation context
+- Mobile navigation trigger for sidebar toggle
+- Theme toggle button using useTheme from next-themes with ktrlplane styling
+
+**Sidebar Implementation Patterns:**
+- Use Fumadocs SidebarTabs component for product navigation at top of sidebar
+- Organize products: Graph, Flow, Assembler, Compass
+- Use shadcn-ui SidebarGroup and SidebarGroupLabel for proper tree structure
+- Implement proper indentation for nested navigation items
+- Follow TOP_LEVEL_SECTIONS pattern from shadcn-ui docs for organization
+- Ensure mobile sidebar collapse/expand functionality
+
+**Table of Contents (TOC) Requirements:**
+- Implement clickable TOC component for "On this page" section
+- Use Fumadocs TOC utilities for automatic heading extraction
+- Follow shadcn-ui docs pattern for active item tracking
+- Position TOC in right sidebar or floating element on larger screens
+- Hide TOC on mobile to save space
+
+**Navigation & Breadcrumbs:**
+- Use Fumadocs breadcrumb utilities for automatic path generation
+- Style breadcrumbs to match ktrlplane design patterns
+- Ensure breadcrumbs update correctly with route changes
+- Add proper aria-labels for accessibility
+
+**Mobile Navigation:**
+- Ensure sidebar is responsive and collapsible
+- Implement proper mobile navigation triggers
+- Test sidebar overlay behavior on mobile devices
+- Verify all interactive elements work on touch interfaces
+
+**General UI Consistency:**
 - Consistent branding and design system (shadcn/ui, OKLCH color space)
 - Accessibility best practices (WCAG 2.1 AA)
 - SEO optimization for all docs pages

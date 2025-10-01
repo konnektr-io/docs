@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { HomeLayout } from "fumadocs-ui/layouts/home";
+import HomeLayout from "../components/layout/HomeLayout";
 import { Link } from "react-router";
 import { baseOptions } from "@/lib/layout.shared";
 import { Bot, Database, GitBranch, Navigation } from "lucide-react";
