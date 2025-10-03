@@ -56,20 +56,20 @@ const SECONDARY_PRODUCTS = [
   {
     name: "KtrlPlane",
     slug: "ktrlplane",
-    status: "available",
+    status: "coming-soon",
     description: "Cloud platform for billing, RBAC & resource management",
-  },
-  {
-    name: "Jexl",
-    slug: "jexl",
-    status: "available",
-    description: "Expression language with interactive playground",
   },
   {
     name: "DBQueryOperator",
     slug: "dbqueryoperator",
-    status: "available",
+    status: "coming-soon",
     description: "Kubernetes operator for database-driven deployments",
+  },
+  {
+    name: "Jexl",
+    slug: "jexl",
+    status: "coming-soon",
+    description: "Expression language with interactive playground",
   },
 ];
 

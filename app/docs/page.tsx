@@ -34,15 +34,6 @@ const renderer = toClientRenderer(
         breadcrumb={{ enabled: false }}
         tableOfContent={{ enabled: false }}
         tableOfContentPopover={{ enabled: false }}
-        /* tableOfContent={{
-          enabled: true,
-          component: undefined, // Use default component
-          style: "normal", // Use normal style instead of clerk
-        }} */
-        /* tableOfContentPopover={{
-          enabled: true,
-          component: undefined, // Use default component
-        }} */
       >
         <title>{frontmatter.title}</title>
         <meta name="description" content={frontmatter.description} />
