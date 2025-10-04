@@ -1,6 +1,10 @@
 # ---- Build Stage ----
 FROM node:lts-alpine AS builder
 
+# Accept build arguments
+ARG GTAG
+ENV VITE_GOOGLE_ANALYTICS=$GTAG
+
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
