@@ -68,7 +68,7 @@ const SECONDARY_PRODUCTS = [
   {
     name: "Jexl",
     slug: "jexl",
-    status: "coming-soon",
+    status: "available",
     description: "Expression language with interactive playground",
   },
 ];
