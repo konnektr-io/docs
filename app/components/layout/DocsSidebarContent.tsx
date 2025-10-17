@@ -18,7 +18,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Link, useLocation } from "react-router";
 import { useMemo, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Check } from "lucide-react";
 
 interface DocsSidebarContentProps {
   tree: PageTree.Root;
@@ -85,24 +85,72 @@ function CollapsibleFolder({
   currentPath: string;
   level: number;
 }) {
+  // Check if this folder has an index page
+  const indexPage = node.children?.find(
+    (child: any) => child.type === "page" && child.name === node.name
+  );
+
+  const isActive = indexPage && currentPath === indexPage.url;
+
   return (
     <Collapsible defaultOpen className="group/collapsible">
       <SidebarMenuItem>
-        <CollapsibleTrigger asChild>
-          <SidebarMenuButton
-            className={`
-            w-full justify-between hover:bg-accent/50 transition-colors
-            ${
-              level === 0 ? "font-semibold text-foreground py-2" : "font-medium"
-            }
-          `}
-          >
-            <span className={level === 0 ? "text-sm" : "text-sm font-normal"}>
-              {node.name}
-            </span>
-            <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=closed]/collapsible:rotate-[-90deg]" />
-          </SidebarMenuButton>
-        </CollapsibleTrigger>
+        <div className="flex items-center w-full">
+          {/* Clickable folder name that navigates to index if it exists */}
+          {indexPage ? (
+            <SidebarMenuButton
+              asChild
+              isActive={isActive}
+              className={`
+                flex-1 justify-start hover:bg-accent/50 transition-colors
+                ${
+                  level === 0
+                    ? "font-semibold text-foreground py-2"
+                    : "font-medium"
+                }
+                ${
+                  isActive
+                    ? "bg-accent text-accent-foreground font-semibold shadow-sm"
+                    : ""
+                }
+              `}
+            >
+              <Link to={indexPage.url}>
+                <span
+                  className={level === 0 ? "text-sm" : "text-sm font-normal"}
+                >
+                  {node.name}
+                </span>
+              </Link>
+            </SidebarMenuButton>
+          ) : (
+            <div
+              className={`
+                flex-1 px-2 py-1.5 text-left
+                ${
+                  level === 0
+                    ? "font-semibold text-foreground py-2"
+                    : "font-medium"
+                }
+              `}
+            >
+              <span className={level === 0 ? "text-sm" : "text-sm font-normal"}>
+                {node.name}
+              </span>
+            </div>
+          )}
+
+          {/* Collapsible trigger for expand/collapse */}
+          <CollapsibleTrigger asChild>
+            <SidebarMenuButton
+              size="sm"
+              className="w-6 h-6 p-0 hover:bg-accent/50 transition-colors"
+            >
+              <ChevronDown className="h-4 w-4 transition-transform group-data-[state=closed]/collapsible:rotate-[-90deg]" />
+            </SidebarMenuButton>
+          </CollapsibleTrigger>
+        </div>
+
         <CollapsibleContent>
           <SidebarMenuSub
             className={level === 0 ? "ml-2 border-l border-border/50" : ""}
@@ -258,7 +306,10 @@ export default function DocsSidebarContent({ tree }: DocsSidebarContentProps) {
                 <span className="font-medium text-sm">
                   Konnektr {currentProductInfo.name}
                 </span>
-                <span className="text-xs text-muted-foreground truncate">
+                <span
+                  className="text-xs text-muted-foreground truncate max-w-[14rem]"
+                  title={currentProductInfo.description}
+                >
                   {currentProductInfo.description}
                 </span>
               </div>
@@ -305,7 +356,10 @@ export default function DocsSidebarContent({ tree }: DocsSidebarContentProps) {
                               </span>
                             )}
                           </div>
-                          <span className="text-xs text-muted-foreground">
+                          <span
+                            className="text-xs text-muted-foreground truncate max-w-[12rem]"
+                            title={product.description}
+                          >
                             {product.description}
                           </span>
                         </Link>
@@ -346,7 +400,10 @@ export default function DocsSidebarContent({ tree }: DocsSidebarContentProps) {
                           <span className="font-medium text-sm">
                             {product.name}
                           </span>
-                          <span className="text-xs text-muted-foreground">
+                          <span
+                            className="text-xs text-muted-foreground truncate max-w-[12rem]"
+                            title={product.description}
+                          >
                             {product.description}
                           </span>
                         </Link>
