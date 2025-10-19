@@ -321,7 +321,7 @@ export default function DocsSidebarContent({ tree }: DocsSidebarContentProps) {
                 {/* Primary Products */}
                 <div>
                   <h4 className="text-sm font-semibold text-foreground mb-2">
-                    Main Products
+                    Products
                   </h4>
                   <div className="space-y-1">
                     {PRIMARY_PRODUCTS.map((product) => {
