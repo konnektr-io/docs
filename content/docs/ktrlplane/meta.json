@@ -1,0 +1,12 @@
+{
+    "pages": [
+        "index",
+        "getting-started",
+        "concepts",
+        "guides",
+        "api",
+        "self-hosting",
+        "development",
+        "support"
+    ]
+}
