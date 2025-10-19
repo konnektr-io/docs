@@ -56,7 +56,7 @@ const SECONDARY_PRODUCTS = [
   {
     name: "KtrlPlane",
     slug: "ktrlplane",
-    status: "coming-soon",
+    status: "available",
     description: "Cloud platform for billing, RBAC & resource management",
   },
   {
