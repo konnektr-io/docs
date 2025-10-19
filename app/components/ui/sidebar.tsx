@@ -28,8 +28,10 @@ import {
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
 // Increased sidebar widths slightly for better readability of product descriptions
-const SIDEBAR_WIDTH = "18rem"
-const SIDEBAR_WIDTH_MOBILE = "19rem"
+// Adjusted after UX feedback: allow a bit more room for long product names/descriptions
+// Desktop: 19rem, Mobile: 20rem (kept icon width the same)
+const SIDEBAR_WIDTH = "19rem"
+const SIDEBAR_WIDTH_MOBILE = "20rem"
 const SIDEBAR_WIDTH_ICON = "3rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 

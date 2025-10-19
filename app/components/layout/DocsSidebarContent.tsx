@@ -301,19 +301,20 @@ export default function DocsSidebarContent({ tree }: DocsSidebarContentProps) {
         </SidebarGroupLabel>
         <div className="px-2">
           <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-            <PopoverTrigger className="flex items-center justify-between w-full p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-left border border-border">
-              <div className="flex flex-col gap-0.5">
+            <PopoverTrigger className="flex items-center gap-3 w-full p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-left border border-border">
+              <div className="flex flex-col gap-0.5 flex-1 min-w-0">
                 <span className="font-medium text-sm">
                   Konnektr {currentProductInfo.name}
                 </span>
                 <span
-                  className="text-xs text-muted-foreground truncate max-w-[14rem]"
+                  className="text-xs text-muted-foreground truncate"
+                  // Allow full width truncation inside flex-1 container
                   title={currentProductInfo.description}
                 >
                   {currentProductInfo.description}
                 </span>
               </div>
-              <ChevronDown className="h-4 w-4 shrink-0" />
+              <ChevronDown className="h-4 w-4 shrink-0 flex-none" />
             </PopoverTrigger>
             <PopoverContent className="w-80 p-4" align="start">
               <div className="space-y-4">
@@ -357,7 +358,7 @@ export default function DocsSidebarContent({ tree }: DocsSidebarContentProps) {
                             )}
                           </div>
                           <span
-                            className="text-xs text-muted-foreground truncate max-w-[12rem]"
+                            className="text-xs text-muted-foreground truncate flex-1 min-w-0"
                             title={product.description}
                           >
                             {product.description}
@@ -401,7 +402,7 @@ export default function DocsSidebarContent({ tree }: DocsSidebarContentProps) {
                             {product.name}
                           </span>
                           <span
-                            className="text-xs text-muted-foreground truncate max-w-[12rem]"
+                            className="text-xs text-muted-foreground truncate flex-1 min-w-0"
                             title={product.description}
                           >
                             {product.description}
