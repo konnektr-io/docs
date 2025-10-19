@@ -422,9 +422,6 @@ export default function DocsSidebarContent({ tree }: DocsSidebarContentProps) {
 
       {/* Navigation Tree */}
       <SidebarGroup>
-        <SidebarGroupLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Documentation
-        </SidebarGroupLabel>
         <SidebarMenu className="space-y-1">
           {renderTreeNodes(productTree.children, location.pathname, 0)}
         </SidebarMenu>
