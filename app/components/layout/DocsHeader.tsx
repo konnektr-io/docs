@@ -35,36 +35,25 @@ export default function DocsHeader({
         {/* Mobile Navigation Trigger */}
         {showSidebarTrigger && <SidebarTrigger />}
 
-        {/* Breadcrumbs using shadcn/ui components */}
+        {/* Reference implementation: plain breadcrumb rendering */}
         {items.length > 0 && (
-          <Breadcrumb>
-            <BreadcrumbList>
-              {items.map((item, index) => {
-                const isLast = index === items.length - 1;
-                return (
-                  <>
-                    {index > 0 && <BreadcrumbSeparator />}
-                    <BreadcrumbItem key={index}>
-                      {item.url ? (
-                        <BreadcrumbLink
-                          asChild
-                          className={!isLast ? "text-muted-foreground" : ""}
-                        >
-                          <Link to={item.url}>{item.name}</Link>
-                        </BreadcrumbLink>
-                      ) : (
-                        <BreadcrumbPage
-                          className={!isLast ? "text-muted-foreground" : ""}
-                        >
-                          {item.name}
-                        </BreadcrumbPage>
-                      )}
-                    </BreadcrumbItem>
-                  </>
-                );
-              })}
-            </BreadcrumbList>
-          </Breadcrumb>
+          <div className="gap-2 text-sm font-medium text-muted-foreground">
+            {items.map((item, i) => (
+              <>
+                {i !== 0 && <span className="mx-1">/</span>}
+                {item.url ? (
+                  <Link
+                    to={item.url}
+                    className="truncate hover:text-accent-foreground"
+                  >
+                    {item.name}
+                  </Link>
+                ) : (
+                  <span className="truncate">{item.name}</span>
+                )}
+              </>
+            ))}
+          </div>
         )}
       </div>
       <div className="flex items-center gap-2">
