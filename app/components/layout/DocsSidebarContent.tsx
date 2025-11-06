@@ -62,7 +62,7 @@ const SECONDARY_PRODUCTS = [
   {
     name: "DBQueryOperator",
     slug: "dbqueryoperator",
-    status: "coming-soon",
+    status: "available",
     description: "Kubernetes operator for database-driven deployments",
   },
   {
