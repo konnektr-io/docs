@@ -18,7 +18,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Link, useLocation } from "react-router";
 import { useMemo, useState } from "react";
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 interface DocsSidebarContentProps {
   tree: PageTree.Root;
@@ -61,7 +61,7 @@ const SECONDARY_PRODUCTS = [
   },
   {
     name: "DBQueryOperator",
-    slug: "dbqueryoperator",
+    slug: "db-query-operator",
     status: "available",
     description: "Kubernetes operator for database-driven deployments",
   },
