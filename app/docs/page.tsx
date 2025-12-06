@@ -8,14 +8,13 @@ import {
   DocsTitle,
 } from "fumadocs-ui/page";
 import { source } from "@/lib/source";
-import { baseOptions } from "@/lib/layout.shared";
-import { type PageTree } from "fumadocs-core/server";
+// import type * as PageTree from "fumadocs-core/page-tree";
 import { getMDXComponents } from "../../mdx-components";
 import { docs } from "../../source.generated";
-import { toClientRenderer } from "fumadocs-mdx/runtime/vite";
+import { toClientRenderer } from "fumadocs-mdx/runtime/browser";
 
 export async function loader({ params }: Route.LoaderArgs) {
-  const slugs = params["*"].split("/").filter((v) => v.length > 0);
+  const slugs = (params["*"] || "").split("/").filter((v) => v.length > 0);
   const page = source.getPage(slugs);
   if (!page) throw new Response("Not found", { status: 404 });
 
@@ -31,9 +30,8 @@ const renderer = toClientRenderer(
     return (
       <DocsPage
         toc={toc}
-        breadcrumb={{ enabled: false }}
-        tableOfContent={{ enabled: false }}
-        tableOfContentPopover={{ enabled: false }}
+        breadcrumb={{ enabled: true }}
+        tableOfContent={{ enabled: true, style: 'clerk' }}
       >
         <title>{frontmatter.title}</title>
         <meta name="description" content={frontmatter.description} />
@@ -52,7 +50,7 @@ export default function Page(props: Route.ComponentProps) {
   const Content = renderer[path];
 
   return (
-    <DocsLayout {...baseOptions()} tree={tree as PageTree.Root}>
+    <DocsLayout tree={tree as any}>
       <Content />
     </DocsLayout>
   );

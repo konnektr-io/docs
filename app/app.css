@@ -186,4 +186,10 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Offset sidebar to account for fixed header */
+  :root {
+    --fd-nav-height: 4rem;
+  }
 }
+

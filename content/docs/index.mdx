@@ -1,4 +1,43 @@
 ---
-title: Konnektr
+title: Welcome to Konnektr
+description: The Digital Twin Platform for intelligent operations.
 ---
-Welcome to the Konnektr documentation! Here you'll find comprehensive guides and references to help you get the most out of Konnektr's powerful features for managing digital twins and IoT solutions.
+
+import { Database, GitBranch, Bot, Navigation } from "lucide-react";
+
+# Welcome to Konnektr
+
+Konnektr is a comprehensive Digital Twin Platform designed to build, deploy, and manage intelligent twin-based applications.
+
+<div className="flex gap-4 my-8">
+  <div className="flex flex-col gap-2">
+     <h3 className="text-lg font-semibold flex items-center gap-2"><Database className="w-5 h-5"/> Graph</h3>
+     <p className="text-muted-foreground text-sm">High-performance digital twin runtime.</p>
+     <a href="/graph" className="text-primary hover:underline text-sm font-medium">Read Docs →</a>
+  </div>
+   <div className="flex flex-col gap-2 opacity-60">
+     <h3 className="text-lg font-semibold flex items-center gap-2"><GitBranch className="w-5 h-5"/> Flow</h3>
+     <p className="text-muted-foreground text-sm">Real-time switching & orchestration.</p>
+     <span className="text-xs border rounded px-1.5 py-0.5 w-fit">Beta</span>
+  </div>
+</div>
+
+## Getting Started
+
+Ready to build your first graph?
+
+<div className="flex gap-4 not-prose">
+  <a
+    href="https://ktrlplane.konnektr.io/resources/create?resource_type=Konnektr.Graph"
+    target="_blank"
+    className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors h-10 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90"
+  >
+    Create Graph Resource
+  </a>
+  <a
+    href="/graph"
+    className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors h-10 px-4 py-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+  >
+    Browse Documentation
+  </a>
+</div>
