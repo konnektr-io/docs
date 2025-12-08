@@ -92,6 +92,8 @@ export default function UnifiedHeader({
               className="w-full my-auto max-md:hidden max-w-[240px]"
             />
 
+            <ModeToggle />
+
             {/* Sign In Button - Desktop */}
             <Button
               asChild
@@ -108,8 +110,6 @@ export default function UnifiedHeader({
                 Sign In
               </a>
             </Button>
-
-            <ModeToggle />
 
             {/* Mobile Navigation */}
             <MobileNavigation className="md:hidden" />

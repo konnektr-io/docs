@@ -3,7 +3,6 @@ import { SidebarProvider, Sidebar } from "../../components/ui/sidebar";
 import DocsSidebarContent from "./DocsSidebarContent";
 import UnifiedHeader from "./UnifiedHeader";
 import { TreeContextProvider } from "fumadocs-ui/contexts/tree";
-import DocsSidebarHeader from "./DocsSidebarHeader";
 
 interface DocsLayoutProps {
   children: ReactNode;
@@ -23,7 +22,6 @@ export default function DocsLayout({ children, tree }: DocsLayoutProps) {
           <div className="flex flex-1 overflow-hidden">
             {/* Sidebar starts below header */}
             <Sidebar className="top-16">
-              <DocsSidebarHeader />
               <DocsSidebarContent tree={tree} />
             </Sidebar>
 
