@@ -8,72 +8,19 @@ import {
   SidebarMenuButton,
   SidebarMenuSub,
   SidebarMenuSubItem,
-  SidebarSeparator,
 } from "../ui/sidebar";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Link, useLocation } from "react-router";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 
 interface DocsSidebarContentProps {
   tree: PageTree.Root;
 }
-
-// Product configuration with primary and secondary products
-const PRIMARY_PRODUCTS = [
-  {
-    name: "Assembler",
-    slug: "assembler",
-    status: "coming-soon",
-    description: "AI-powered digital twin builder",
-  },
-  {
-    name: "Graph",
-    slug: "graph",
-    status: "available",
-    description: "Scalable graph database & API",
-  },
-  {
-    name: "Flow",
-    slug: "flow",
-    status: "coming-soon",
-    description: "Real-time data & event orchestrator",
-  },
-  {
-    name: "Compass",
-    slug: "compass",
-    status: "coming-soon",
-    description: "Analytics & insights platform",
-  },
-];
-
-const SECONDARY_PRODUCTS = [
-  {
-    name: "KtrlPlane",
-    slug: "ktrlplane",
-    status: "available",
-    description: "Cloud platform for billing, RBAC & resource management",
-  },
-  {
-    name: "DBQueryOperator",
-    slug: "db-query-operator",
-    status: "available",
-    description: "Kubernetes operator for database-driven deployments",
-  },
-  {
-    name: "Jexl",
-    slug: "jexl",
-    status: "available",
-    description: "Expression language with interactive playground",
-  },
-];
-
-const ALL_PRODUCTS = [...PRIMARY_PRODUCTS, ...SECONDARY_PRODUCTS];
 
 // Create a collapsible folder component using proper shadcn pattern with enhanced styling
 function CollapsibleFolder({
@@ -249,7 +196,6 @@ function renderTreeNodes(
 
 export default function DocsSidebarContent({ tree }: DocsSidebarContentProps) {
   const location = useLocation();
-  const [popoverOpen, setPopoverOpen] = useState(false);
 
   // Determine current product from pathname
   const currentProduct = useMemo(() => {
@@ -259,14 +205,6 @@ export default function DocsSidebarContent({ tree }: DocsSidebarContentProps) {
     }
     return "graph"; // default to Graph
   }, [location.pathname]);
-
-  // Get current product details
-  const currentProductInfo = useMemo(() => {
-    return (
-      ALL_PRODUCTS.find((product) => product.slug === currentProduct) ||
-      PRIMARY_PRODUCTS[1]
-    ); // default to Graph
-  }, [currentProduct]);
 
   // Filter tree to current product sections and remove main product index page
   const productTree = useMemo(() => {
@@ -294,133 +232,7 @@ export default function DocsSidebarContent({ tree }: DocsSidebarContentProps) {
 
   return (
     <SidebarContent className="flex-1 overflow-y-auto">
-      {/* Product Selector */}
-      <SidebarGroup>
-        <SidebarGroupLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Product
-        </SidebarGroupLabel>
-        <div className="px-2">
-          <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-            <PopoverTrigger className="flex items-center gap-3 w-full p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-left border border-border">
-              <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                <span className="font-medium text-sm">
-                  Konnektr {currentProductInfo.name}
-                </span>
-                <span
-                  className="text-xs text-muted-foreground truncate"
-                  // Allow full width truncation inside flex-1 container
-                  title={currentProductInfo.description}
-                >
-                  {currentProductInfo.description}
-                </span>
-              </div>
-              <ChevronDown className="h-4 w-4 shrink-0 flex-none" />
-            </PopoverTrigger>
-            <PopoverContent className="w-80 p-4" align="start">
-              <div className="space-y-4">
-                {/* Primary Products */}
-                <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-2">
-                    Products
-                  </h4>
-                  <div className="space-y-1">
-                    {PRIMARY_PRODUCTS.map((product) => {
-                      const isAvailable = product.status === "available";
-                      const isCurrentProduct = currentProduct === product.slug;
-
-                      return (
-                        <Link
-                          key={product.slug}
-                          to={isAvailable ? `/docs/${product.slug}` : "#"}
-                          onClick={() => {
-                            setPopoverOpen(false);
-                            if (!isAvailable) return false;
-                          }}
-                          className={`
-                            w-full text-left flex flex-col gap-1 px-3 py-2 rounded-lg transition-colors
-                            ${
-                              isCurrentProduct
-                                ? "bg-accent text-accent-foreground"
-                                : isAvailable
-                                ? "hover:bg-accent/50 cursor-pointer"
-                                : "bg-muted/40 text-muted-foreground cursor-not-allowed opacity-60"
-                            }
-                          `}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="font-semibold text-sm">
-                              Konnektr {product.name}
-                            </span>
-                            {product.status === "coming-soon" && (
-                              <span className="text-xs text-muted-foreground">
-                                Soon
-                              </span>
-                            )}
-                          </div>
-                          <span
-                            className="text-xs text-muted-foreground truncate flex-1 min-w-0"
-                            title={product.description}
-                          >
-                            {product.description}
-                          </span>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Secondary Products */}
-                <div className="border-t pt-3">
-                  <h4 className="text-sm font-semibold text-foreground mb-2">
-                    Platform & Tools
-                  </h4>
-                  <div className="space-y-1">
-                    {SECONDARY_PRODUCTS.map((product) => {
-                      const isAvailable = product.status === "available";
-                      const isCurrentProduct = currentProduct === product.slug;
-
-                      return (
-                        <Link
-                          key={product.slug}
-                          to={isAvailable ? `/docs/${product.slug}` : "#"}
-                          onClick={() => {
-                            setPopoverOpen(false);
-                            if (!isAvailable) return false;
-                          }}
-                          className={`
-                            w-full text-left flex flex-col gap-1 px-3 py-2 rounded-lg transition-colors
-                            ${
-                              isCurrentProduct
-                                ? "bg-accent text-accent-foreground"
-                                : isAvailable
-                                ? "hover:bg-accent/50 cursor-pointer"
-                                : "bg-muted/40 text-muted-foreground cursor-not-allowed opacity-60"
-                            }
-                          `}
-                        >
-                          <span className="font-medium text-sm">
-                            {product.name}
-                          </span>
-                          <span
-                            className="text-xs text-muted-foreground truncate flex-1 min-w-0"
-                            title={product.description}
-                          >
-                            {product.description}
-                          </span>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-      </SidebarGroup>
-
-      <SidebarSeparator className="my-4" />
-
-      {/* Navigation Tree */}
+      {/* Navigation Tree - Product switching now handled in header */}
       <SidebarGroup>
         <SidebarMenu className="space-y-1">
           {renderTreeNodes(productTree.children, location.pathname, 0)}

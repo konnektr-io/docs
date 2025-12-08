@@ -1,4 +1,168 @@
 ---
-title: Konnektr
+title: Konnektr Platform Documentation
+description: Technical documentation, guides, and API references for building scalable digital twin solutions with Konnektr
 ---
-Welcome to the Konnektr documentation! Here you'll find comprehensive guides and references to help you get the most out of Konnektr's powerful features for managing digital twins and IoT solutions.
+
+# Welcome to Konnektr Documentation
+
+Konnektr is a comprehensive platform for building, managing, and scaling **digital twin solutions**. Our modular approach lets you start with what you need and expand as your requirements grow.
+
+## 🚀 Get Started with Konnektr Graph
+
+**Konnektr Graph** is our flagship digital twin runtime - a high-performance, Azure Digital Twins-compatible platform that runs on PostgreSQL with Apache AGE. It's production-ready and available now.
+
+### Why Konnektr Graph?
+
+- **Azure Digital Twins Compatible** - Use standard Azure SDKs (.NET, Python, JavaScript)
+- **Built on PostgreSQL + Apache AGE** - Enterprise-grade graph database
+- **Real-time Event Streaming** - Stream state changes to Kafka, Azure Data Explorer, and more
+- **Powerful Graph Queries** - Complex Cypher queries over your digital twin graph
+- **Deploy in Minutes** - Fully managed service or self-hosted
+
+### Deploy Your First Graph Instance
+
+<a 
+  href="https://ktrlplane.konnektr.io/resources/create?resource_type=Konnektr.Graph"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:opacity-90 transition-opacity no-underline"
+>
+  Deploy Graph Instance →
+</a>
+
+Get your digital twin runtime running in just a few clicks with our managed service.
+
+### Essential Graph Documentation
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+  <a href="/docs/graph/getting-started/quickstart" className="block p-4 border rounded-lg hover:border-primary transition-colors no-underline">
+    <h3 className="font-semibold text-lg mb-2">Quick Start Guide</h3>
+    <p className="text-sm text-muted-foreground">Get started with Konnektr Graph in 5 minutes</p>
+  </a>
+  
+  <a href="/docs/graph/how-to-guides/using-azure-digital-twins-sdks" className="block p-4 border rounded-lg hover:border-primary transition-colors no-underline">
+    <h3 className="font-semibold text-lg mb-2">Azure SDK Integration</h3>
+    <p className="text-sm text-muted-foreground">Use standard Azure Digital Twins SDKs with Graph</p>
+  </a>
+  
+  <a href="/docs/graph/concepts/dtdl" className="block p-4 border rounded-lg hover:border-primary transition-colors no-underline">
+    <h3 className="font-semibold text-lg mb-2">DTDL & Models</h3>
+    <p className="text-sm text-muted-foreground">Learn about Digital Twins Definition Language</p>
+  </a>
+  
+  <a href="/docs/graph/deployment-installation/self-host" className="block p-4 border rounded-lg hover:border-primary transition-colors no-underline">
+    <h3 className="font-semibold text-lg mb-2">Self-Hosted Deployment</h3>
+    <p className="text-sm text-muted-foreground">Deploy Graph in your own infrastructure</p>
+  </a>
+</div>
+
+---
+
+## 🛠️ Platform Tools & Services
+
+### KtrlPlane - Cloud Control Plane
+
+Centralized management for users, organizations, projects, resources, billing, and RBAC across the Konnektr Platform.
+
+**Key Features:**
+- Multi-tenant organization and project management
+- Role-based access control (RBAC)
+- Billing and subscription management
+- Unified resource lifecycle management
+- API-first architecture
+
+<a href="/docs/ktrlplane" className="text-primary hover:underline font-medium">
+  View KtrlPlane Documentation →
+</a>
+
+### DB Query Operator - Kubernetes Operator
+
+Bridge your database state with your Kubernetes cluster. Automatically create, update, and prune resources based on database query results.
+
+**Key Features:**
+- Database-driven infrastructure management
+- Multi-tenant resource provisioning
+- Go templating for flexible manifest generation
+- CloudNativePG integration
+- Automatic resource pruning
+
+<a href="/docs/db-query-operator" className="text-primary hover:underline font-medium">
+  View DB Query Operator Documentation →
+</a>
+
+### Jexl Extended - Expression Language
+
+Context-based expression parser and evaluator with 80+ built-in functions. Available in JavaScript, Python, and C#.
+
+**Key Features:**
+- Identical syntax across all implementations
+- 80+ built-in functions (array, string, math, date/time)
+- Interactive playground with Monaco Editor
+- TypeScript support with IntelliSense
+- Custom functions and transforms
+
+<a href="/docs/jexl" className="text-primary hover:underline font-medium">
+  View Jexl Documentation →
+</a>
+
+<a href="https://konnektr-io.github.io/jexl-playground/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium ml-4">
+  Try Interactive Playground →
+</a>
+
+---
+
+## 🔮 Coming Soon
+
+### Flow - Real-time Data Orchestration
+
+Event processing and data orchestration engine for real-time digital twin data flows.
+
+**Planned Features:**
+- Visual pipeline design
+- Event-driven architecture
+- Pre-built integrations
+- Scalable stream processing
+
+### Assembler - AI-Powered Model Builder
+
+AI-powered tool for creating digital twin models from existing data sources and documentation.
+
+**Planned Features:**
+- Automatic DTDL generation
+- Data source mapping
+- Model validation
+- Deployment automation
+
+### Compass - Analytics & Insights
+
+Analytics and visualization platform for extracting insights from your digital twin data.
+
+**Planned Features:**
+- Custom dashboards
+- Time-series analysis
+- Anomaly detection
+- Predictive analytics
+
+---
+
+## 📚 Additional Resources
+
+- **[GitHub Organization](https://github.com/konnektr-io)** - All our open-source repositories
+- **[Graph Repository](https://github.com/konnektr-io/pg-age-digitaltwins)** - Konnektr Graph source code
+- **[Community Support](https://github.com/konnektr-io/pg-age-digitaltwins/discussions)** - Ask questions and share ideas
+- **[Report Issues](https://github.com/konnektr-io/pg-age-digitaltwins/issues)** - Bug reports and feature requests
+
+---
+
+## 🎯 Use Cases
+
+Konnektr Graph powers digital twin solutions across industries:
+
+- **Smart Buildings** - Model building systems, sensors, and spaces
+- **Industrial IoT** - Manufacturing, supply chain, and logistics
+- **Smart Cities** - Urban infrastructure and services
+- **Healthcare** - Hospital operations and patient flow
+- **Energy & Utilities** - Power grids and resource management
+- **Retail** - Store operations and inventory management
+
+Ready to build your digital twin solution? [Deploy a Graph instance now](https://ktrlplane.konnektr.io/resources/create?resource_type=Konnektr.Graph) or explore our [documentation](/docs/graph).

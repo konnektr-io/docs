@@ -31,9 +31,9 @@ const renderer = toClientRenderer(
     return (
       <DocsPage
         toc={toc}
-        breadcrumb={{ enabled: false }}
-        tableOfContent={{ enabled: false }}
-        tableOfContentPopover={{ enabled: false }}
+        breadcrumb={{ enabled: true }}
+        tableOfContent={{ enabled: true }}
+        tableOfContentPopover={{ enabled: true }}
       >
         <title>{frontmatter.title}</title>
         <meta name="description" content={frontmatter.description} />
