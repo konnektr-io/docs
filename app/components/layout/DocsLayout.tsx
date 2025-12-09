@@ -10,21 +10,19 @@ interface DocsLayoutProps {
 }
 
 export default function DocsLayout({ children, tree }: DocsLayoutProps) {
-  // Set nav height for Fumadocs layout compatibility
-  // (should be set in global CSS as well)
   return (
     <TreeContextProvider tree={tree}>
       <SidebarProvider>
-        <div className="flex flex-col h-screen w-full">
+        <div className="flex flex-col min-h-screen w-full">
           {/* Unified sticky header at the top */}
           <UnifiedHeader showSidebarTrigger={true} />
-
-          <div className="flex flex-1 overflow-hidden">
-            {/* Sidebar starts below header */}
-            <Sidebar className="top-16">
-              <DocsSidebarContent tree={tree} />
-            </Sidebar>
-
+          <div className="flex flex-1 w-full">
+            {/* Sidebar below header, full height minus header */}
+            <div style={{ height: "calc(100vh - 64px)" }} className="relative">
+              <Sidebar className="h-full overflow-y-auto">
+                <DocsSidebarContent tree={tree} />
+              </Sidebar>
+            </div>
             {/* Main content area */}
             <main className="flex-1 overflow-y-auto">
               {/* Let DocsPage component handle the TOC layout internally */}
