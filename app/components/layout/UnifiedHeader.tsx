@@ -60,62 +60,58 @@ export default function UnifiedHeader({
   showSidebarTrigger = false,
 }: UnifiedHeaderProps) {
   return (
-    <header className="sticky top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-4">
-            {/* Mobile Navigation Trigger */}
-            {showSidebarTrigger && <SidebarTrigger className="md:hidden" />}
+    <header className="sticky top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border h-16">
+      <div
+        className="flex items-center justify-between w-full px-6"
+        style={{ minHeight: "56px" }}
+      >
+        {/* Left: Logo, Title, Desktop Navigation */}
+        <div className="flex items-center gap-4 min-w-0">
+          {/* Mobile Navigation Trigger */}
+          {showSidebarTrigger && <SidebarTrigger className="md:hidden" />}
 
+          <a
+            href="https://konnektr.io"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 font-semibold text-lg hover:opacity-80 transition-opacity"
+          >
+            <img src="/konnektr.svg" alt="Konnektr Logo" className="h-7 w-7" />
+            <span className="hidden sm:inline">Konnektr Docs</span>
+          </a>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex ml-4">
+            <DesktopNavigation />
+          </div>
+        </div>
+
+        {/* Right: Search, Mode, Sign In, Mobile Nav */}
+        <div className="flex items-center gap-2 md:gap-4">
+          <LargeSearchToggle
+            hideIfDisabled
+            className="w-full my-auto max-md:hidden max-w-[240px]"
+          />
+
+          <ModeToggle />
+
+          <Button
+            asChild
+            variant="default"
+            size="sm"
+            className="hidden md:flex"
+          >
             <a
-              href="https://konnektr.io"
+              href="https://ktrlplane.konnektr.io"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 font-semibold text-lg hover:opacity-80 transition-opacity"
             >
-              <img
-                src="/konnektr.svg"
-                alt="Konnektr Logo"
-                className="h-7 w-7"
-              />
-              <span>Konnektr</span>
+              <LogIn className="h-4 w-4 mr-2" />
+              Sign In
             </a>
+          </Button>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex ml-4">
-              <DesktopNavigation />
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 md:gap-4">
-            {/* Search Button */}
-            <LargeSearchToggle
-              hideIfDisabled
-              className="w-full my-auto max-md:hidden max-w-[240px]"
-            />
-
-            <ModeToggle />
-
-            {/* Sign In Button - Desktop */}
-            <Button
-              asChild
-              variant="default"
-              size="sm"
-              className="hidden md:flex"
-            >
-              <a
-                href="https://ktrlplane.konnektr.io"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <LogIn className="h-4 w-4 mr-2" />
-                Sign In
-              </a>
-            </Button>
-
-            {/* Mobile Navigation */}
-            <MobileNavigation className="md:hidden" />
-          </div>
+          <MobileNavigation className="md:hidden" />
         </div>
       </div>
     </header>
