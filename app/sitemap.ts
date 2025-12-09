@@ -15,7 +15,7 @@
 
 import { source } from "./lib/source";
 
-const SITE_URL = "https://docs.konnektr.com";
+const SITE_URL = "https://docs.konnektr.io";
 
 export async function getSitemap() {
   // Helper to build absolute URLs
