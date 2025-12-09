@@ -29,12 +29,7 @@ const renderer = toClientRenderer(
   docs.doc,
   ({ toc, default: Mdx, frontmatter }) => {
     return (
-      <DocsPage
-        toc={toc}
-        breadcrumb={{ enabled: true }}
-        tableOfContent={{ enabled: true }}
-        tableOfContentPopover={{ enabled: true }}
-      >
+      <DocsPage toc={toc}>
         <title>{frontmatter.title}</title>
         <meta name="description" content={frontmatter.description} />
         <DocsTitle>{frontmatter.title}</DocsTitle>
