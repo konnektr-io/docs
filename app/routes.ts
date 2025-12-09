@@ -5,4 +5,5 @@ export default [
   index("routes/home.tsx"),
   route("docs/*", "docs/page.tsx"),
   route("api/search", "docs/search.ts"),
+  route("sitemap.xml", "routes/sitemap.xml.ts"),
 ] satisfies RouteConfig;
