@@ -1,4 +1,251 @@
 ---
-title: Konnektr
+title: Konnektr Platform Documentation
+description: Technical documentation, guides, and API references for building scalable digital twin solutions with Konnektr
 ---
-Welcome to the Konnektr documentation! Here you'll find comprehensive guides and references to help you get the most out of Konnektr's powerful features for managing digital twins and IoT solutions.
+
+# Welcome to Konnektr
+
+Konnektr is a comprehensive platform for building, managing, and scaling **digital twin solutions**. Our modular approach lets you start with what you need and expand as your requirements grow.
+
+## Platform Components
+
+<Cards>
+  <Card 
+    href="/docs/graph"
+    title="Konnektr Graph"
+    description="Azure Digital Twins-compatible runtime on PostgreSQL + Apache AGE. Production-ready now."
+  />
+  <Card 
+    href="/docs/ktrlplane"
+    title="KtrlPlane"
+    description="Cloud control plane for users, organizations, projects, resources, billing, and RBAC."
+  />
+  <Card 
+    href="/docs/db-query-operator"
+    title="DB Query Operator"
+    description="Kubernetes operator that bridges database state with your cluster infrastructure."
+  />
+  <Card 
+    href="/docs/jexl"
+    title="Jexl Extended"
+    description="Expression language with 80+ built-in functions. Available in JS, Python, and C#."
+  />
+</Cards>
+
+---
+
+## Get Started with Konnektr Graph
+
+**Konnektr Graph** is our flagship digital twin runtime - a high-performance, Azure Digital Twins-compatible platform that runs on PostgreSQL with Apache AGE.
+
+<Callout title="Production Ready" type="info">
+  Konnektr Graph is available now and ready for production deployments. Deploy a managed instance or self-host in your infrastructure.
+</Callout>
+
+### Why Choose Konnektr Graph?
+
+<Cards>
+  <Card title="Azure Compatible">
+    Use standard Azure Digital Twins SDKs (.NET, Python, JavaScript) without code changes.
+  </Card>
+  <Card title="PostgreSQL + Apache AGE">
+    Built on enterprise-grade graph database with full SQL compatibility and powerful Cypher queries.
+  </Card>
+  <Card title="Real-time Events">
+    Stream state changes to Kafka, Azure Data Explorer, and more with built-in event streaming.
+  </Card>
+  <Card title="Deploy Anywhere">
+    Fully managed service or self-hosted deployment in minutes with Docker or Kubernetes.
+  </Card>
+</Cards>
+
+### Deploy Your First Instance
+
+<a 
+  href="https://ktrlplane.konnektr.io/resources/create?resource_type=Konnektr.Graph"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:opacity-90 transition-opacity no-underline"
+>
+  Deploy Graph Instance →
+</a>
+
+Get your digital twin runtime running in just a few clicks with our managed service.
+
+### Essential Graph Documentation
+
+<Cards>
+  <Card 
+    href="/docs/graph/getting-started/quickstart"
+    title="Quick Start Guide"
+    description="Get started with Konnektr Graph in 5 minutes"
+  />
+  <Card 
+    href="/docs/graph/how-to-guides/using-azure-digital-twins-sdks"
+    title="Azure SDK Integration"
+    description="Use standard Azure Digital Twins SDKs with Graph"
+  />
+  <Card 
+    href="/docs/graph/concepts/dtdl"
+    title="DTDL & Models"
+    description="Learn about Digital Twins Definition Language"
+  />
+  <Card 
+    href="/docs/graph/deployment-installation/self-host"
+    title="Self-Hosted Deployment"
+    description="Deploy Graph in your own infrastructure"
+  />
+</Cards>
+
+---
+
+## Platform Tools
+
+### KtrlPlane - Cloud Control Plane
+
+Centralized management for the entire Konnektr Platform with multi-tenant support, RBAC, billing, and resource lifecycle management.
+
+<Cards>
+  <Card title="Multi-Tenant Management">
+    Organizations, projects, and team collaboration with granular permissions.
+  </Card>
+  <Card title="Role-Based Access Control">
+    Fine-grained RBAC for secure access to resources across the platform.
+  </Card>
+  <Card title="Billing & Subscriptions">
+    Usage tracking, billing management, and subscription plans.
+  </Card>
+  <Card title="API-First Architecture">
+    Complete REST API for programmatic resource management and automation.
+  </Card>
+</Cards>
+
+<Callout title="Explore KtrlPlane" type="info">
+  [View KtrlPlane Documentation →](/docs/ktrlplane)
+</Callout>
+
+### DB Query Operator - Kubernetes Operator
+
+Bridge your database state with your Kubernetes cluster. Automatically create, update, and prune resources based on database query results.
+
+<Cards>
+  <Card title="Database-Driven Infrastructure">
+    Automatically provision Kubernetes resources based on database state.
+  </Card>
+  <Card title="Multi-Tenant Support">
+    Isolate resources per tenant with dynamic namespace and resource creation.
+  </Card>
+  <Card title="Go Templating">
+    Flexible manifest generation with Go templates for dynamic resource definitions.
+  </Card>
+  <Card title="CloudNativePG Integration">
+    Native support for PostgreSQL cluster provisioning and management.
+  </Card>
+</Cards>
+
+<Callout title="Learn More" type="info">
+  [View DB Query Operator Documentation →](/docs/db-query-operator)
+</Callout>
+
+### Jexl Extended - Expression Language
+
+Context-based expression parser and evaluator with 80+ built-in functions. Identical syntax across JavaScript, Python, and C# implementations.
+
+<Cards>
+  <Card title="Cross-Language Support">
+    Identical syntax and behavior across JS, Python, and C# implementations.
+  </Card>
+  <Card title="80+ Built-in Functions">
+    Array, string, math, date/time, and more - all with consistent behavior.
+  </Card>
+  <Card title="Interactive Playground">
+    Test expressions with Monaco Editor, IntelliSense, and real-time evaluation.
+  </Card>
+  <Card title="Custom Extensions">
+    Add custom functions and transforms to fit your use case.
+  </Card>
+</Cards>
+
+<Callout title="Try It Now" type="info">
+  [View Jexl Documentation →](/docs/jexl) | [Try Interactive Playground →](https://konnektr-io.github.io/jexl-playground/)
+</Callout>
+
+---
+
+## Coming Soon
+
+<Callout title="Future Platform Components" type="warn">
+  The following components are in development and not yet available. Check back for updates.
+</Callout>
+
+<Cards>
+  <Card title="Flow - Real-time Data Orchestration">
+    Event processing and data orchestration engine for real-time digital twin data flows with visual pipeline design.
+  </Card>
+  <Card title="Assembler - AI-Powered Model Builder">
+    AI-powered tool for creating digital twin models from existing data sources with automatic DTDL generation.
+  </Card>
+  <Card title="Compass - Analytics & Insights">
+    Analytics and visualization platform with custom dashboards, time-series analysis, and anomaly detection.
+  </Card>
+</Cards>
+
+---
+
+## Use Cases
+
+Konnektr Graph powers digital twin solutions across industries:
+
+<Cards>
+  <Card title="Smart Buildings">
+    Model building systems, sensors, and spaces for intelligent facility management.
+  </Card>
+  <Card title="Industrial IoT">
+    Manufacturing, supply chain, and logistics with real-time operational insights.
+  </Card>
+  <Card title="Smart Cities">
+    Urban infrastructure and services with integrated data from multiple sources.
+  </Card>
+  <Card title="Healthcare">
+    Hospital operations and patient flow optimization with digital twin modeling.
+  </Card>
+  <Card title="Energy & Utilities">
+    Power grids and resource management with real-time monitoring and control.
+  </Card>
+  <Card title="Retail">
+    Store operations and inventory management with digital representations of physical assets.
+  </Card>
+</Cards>
+
+---
+
+## Community & Support
+
+<Cards>
+  <Card 
+    href="https://github.com/konnektr-io"
+    title="GitHub Organization"
+    description="All our open-source repositories"
+  />
+  <Card 
+    href="https://github.com/konnektr-io/pg-age-digitaltwins"
+    title="Graph Repository"
+    description="Konnektr Graph source code and releases"
+  />
+  <Card 
+    href="https://github.com/konnektr-io/pg-age-digitaltwins/discussions"
+    title="Community Support"
+    description="Ask questions and share ideas"
+  />
+  <Card 
+    href="https://github.com/konnektr-io/pg-age-digitaltwins/issues"
+    title="Report Issues"
+    description="Bug reports and feature requests"
+  />
+</Cards>
+
+---
+
+<Callout title="Ready to Get Started?" type="info">
+  [Deploy a Graph instance now](https://ktrlplane.konnektr.io/resources/create?resource_type=Konnektr.Graph) or explore our [Graph documentation](/docs/graph) to learn more.
+</Callout>

@@ -53,34 +53,45 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
 
-        {/* Google Analytics with Consent */}
-        {import.meta.env.VITE_GOOGLE_ANALYTICS && (
+        {/* Google Tag Manager with Consent */}
+        {import.meta.env.VITE_GTM_ID && (
           <>
-            <script
-              async
-              src={`https://www.googletagmanager.com/gtag/js?id=${
-                import.meta.env.VITE_GOOGLE_ANALYTICS
-              }`}
-            />
+            {/* Google Tag Manager script (head) */}
             <script
               dangerouslySetInnerHTML={{
-                __html: `window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                
-                // Set default consent
-                gtag('consent', 'default', {
-                  'ad_storage': 'denied',
-                  'analytics_storage': 'denied'
-                });
-
-                gtag('config', '${import.meta.env.VITE_GOOGLE_ANALYTICS}');`,
+                __html: `
+                  (function(w,d,s,l,i){
+                    w[l]=w[l]||[];
+                    w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+                    var f=d.getElementsByTagName(s)[0],
+                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+                    j.async=true;
+                    j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+                    f.parentNode.insertBefore(j,f);
+                  })(window,document,'script','dataLayer','${
+                    import.meta.env.VITE_GTM_ID
+                  }');
+                `,
               }}
             />
           </>
         )}
       </head>
       <body className="flex flex-col min-h-screen">
+        {/* Google Tag Manager noscript fallback */}
+        {import.meta.env.VITE_GOOGLE_TAG_MANAGER && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${
+                import.meta.env.VITE_GOOGLE_TAG_MANAGER
+              }`}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+              title="Google Tag Manager"
+            />
+          </noscript>
+        )}
         <ReactRouterProvider>
           <RootProvider>{children}</RootProvider>
         </ReactRouterProvider>

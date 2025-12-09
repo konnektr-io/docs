@@ -58,6 +58,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            GTAF=${{ vars.VITE_GOOGLE_ANALYTICS }}
+            GTM_ID=${{ secrets.VITE_GTM_ID }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
