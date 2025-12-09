@@ -67,8 +67,10 @@ export default function UnifiedHeader({
             {/* Mobile Navigation Trigger */}
             {showSidebarTrigger && <SidebarTrigger className="md:hidden" />}
 
-            <Link
-              to="/"
+            <a
+              href="https://konnektr.io"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-2 font-semibold text-lg hover:opacity-80 transition-opacity"
             >
               <img
@@ -77,7 +79,7 @@ export default function UnifiedHeader({
                 className="h-7 w-7"
               />
               <span>Konnektr</span>
-            </Link>
+            </a>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex ml-4">
