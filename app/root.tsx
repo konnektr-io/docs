@@ -54,12 +54,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
 
         {/* Google Tag Manager with Consent */}
-        {import.meta.env.VITE_GTM_ID && (
+        {import.meta.env.VITE_GTM_ID ? (
           <>
             {/* Google Tag Manager script (head) */}
             <script
               dangerouslySetInnerHTML={{
                 __html: `
+                  console.log('[GTM] Loading with ID: ${
+                    import.meta.env.VITE_GTM_ID
+                  }');
                   (function(w,d,s,l,i){
                     w[l]=w[l]||[];
                     w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
@@ -75,15 +78,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
               }}
             />
           </>
+        ) : (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `console.log('[GTM] VITE_GTM_ID not set during build');`,
+            }}
+          />
         )}
       </head>
       <body className="flex flex-col min-h-screen">
         {/* Google Tag Manager noscript fallback */}
-        {import.meta.env.VITE_GOOGLE_TAG_MANAGER && (
+        {import.meta.env.VITE_GTM_ID && (
           <noscript>
             <iframe
               src={`https://www.googletagmanager.com/ns.html?id=${
-                import.meta.env.VITE_GOOGLE_TAG_MANAGER
+                import.meta.env.VITE_GTM_ID
               }`}
               height="0"
               width="0"

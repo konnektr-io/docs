@@ -2,7 +2,7 @@
 FROM node:lts-alpine AS builder
 
 # Accept build arguments
-ARG GTM_ID
+ARG GTM_ID=GTM-PLACEHOLDER
 ENV VITE_GTM_ID=$GTM_ID
 
 # Install pnpm
@@ -27,6 +27,9 @@ COPY ./public ./public
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
+
+# Verify GTM_ID is set (for debugging)
+RUN echo "Building with VITE_GTM_ID: $VITE_GTM_ID"
 
 # Build the React Router SSR app
 RUN pnpm build
