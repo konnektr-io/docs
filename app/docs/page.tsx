@@ -21,7 +21,7 @@ export async function loader({ params }: Route.LoaderArgs) {
 
   return {
     path: page.path,
-    tree: source.pageTree,
+    tree: source.getPageTree(),
   };
 }
 
