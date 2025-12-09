@@ -2,7 +2,7 @@
 FROM node:lts-alpine AS builder
 
 # Accept build arguments
-ARG GTM_ID=GTM-PLACEHOLDER
+ARG GTM_ID
 ENV VITE_GTM_ID=$GTM_ID
 
 # Install pnpm

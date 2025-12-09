@@ -14,8 +14,16 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useMemo } from "react";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "../ui/select";
+import { navigationProducts } from "../../lib/navigation-products";
 import { ChevronDown } from "lucide-react";
 
 interface DocsSidebarContentProps {
@@ -196,6 +204,7 @@ function renderTreeNodes(
 
 export default function DocsSidebarContent({ tree }: DocsSidebarContentProps) {
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Determine current product from pathname
   const currentProduct = useMemo(() => {
@@ -205,6 +214,11 @@ export default function DocsSidebarContent({ tree }: DocsSidebarContentProps) {
     }
     return "graph"; // default to Graph
   }, [location.pathname]);
+
+  // Find the current product object for the switcher
+  const currentProductObj =
+    navigationProducts.find((p) => p.path === `/docs/${currentProduct}`) ||
+    navigationProducts[0];
 
   // Filter tree to current product sections and remove main product index page
   const productTree = useMemo(() => {
@@ -232,8 +246,42 @@ export default function DocsSidebarContent({ tree }: DocsSidebarContentProps) {
 
   return (
     <SidebarContent className="flex-1 overflow-y-auto">
-      {/* Navigation Tree - Product switching now handled in header */}
+      {/* Product Switcher */}
       <SidebarGroup>
+        <SidebarGroupLabel>Product</SidebarGroupLabel>
+        <div className="px-3 pt-2 pb-3">
+          <Select
+            value={currentProductObj.path}
+            onValueChange={(val) => {
+              navigate(val);
+            }}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue>
+                <div className="flex flex-col items-start">
+                  <span className="truncate font-medium text-sm">
+                    {currentProductObj.name}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {currentProductObj.navDescription}
+                  </span>
+                </div>
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {navigationProducts.map((product) => (
+                <SelectItem key={product.path} value={product.path}>
+                  <div className="flex flex-col">
+                    <span>{product.name}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {product.navDescription}
+                    </span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <SidebarMenu className="space-y-1">
           {renderTreeNodes(productTree.children, location.pathname, 0)}
         </SidebarMenu>

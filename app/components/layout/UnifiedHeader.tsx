@@ -5,14 +5,7 @@ import { LargeSearchToggle } from "fumadocs-ui/components/layout/search-toggle";
 import { SidebarTrigger } from "../ui/sidebar";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import {
-  ChevronDown,
-  Menu,
-  Database,
-  GitBranch,
-  Bot,
-  LogIn,
-} from "lucide-react";
+import { ChevronDown, Menu, LogIn } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -21,36 +14,7 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 
-const navigationProducts = [
-  {
-    name: "Graph",
-    path: "/docs/graph",
-    status: "available",
-    navDescription: "Digital twin runtime & graph database",
-    icon: Database,
-  },
-  {
-    name: "Ktrlplane",
-    path: "/docs/ktrlplane",
-    status: "available",
-    navDescription: "Cloud control plane",
-    icon: GitBranch,
-  },
-  {
-    name: "Jexl",
-    path: "/docs/jexl",
-    status: "available",
-    navDescription: "JavaScript expression language",
-    icon: Bot,
-  },
-  {
-    name: "DB Query Operator",
-    path: "/docs/db-query-operator",
-    status: "available",
-    navDescription: "Kubernetes operator for database-driven deployments",
-    icon: Database,
-  },
-];
+import { navigationProducts } from "../../lib/navigation-products";
 
 interface UnifiedHeaderProps {
   showSidebarTrigger?: boolean;
