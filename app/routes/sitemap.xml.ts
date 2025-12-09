@@ -2,7 +2,7 @@
 // This exports a loader that generates the sitemap on demand
 import { source } from "../lib/source";
 
-const SITE_URL = "https://docs.konnektr.com";
+const SITE_URL = "https://docs.konnektr.io";
 
 export async function loader({ request }: { request: Request }) {
   // Helper to build absolute URLs
