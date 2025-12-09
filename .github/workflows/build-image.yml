@@ -58,6 +58,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            GTM_ID=${{ secrets.VITE_GTM_ID }}
+            GTM_ID=${{ secrets.GTM_ID }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
