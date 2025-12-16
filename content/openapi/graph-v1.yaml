@@ -1,0 +1,61 @@
+openapi: 3.0.1
+info:
+  title: Konnektr Graph API
+  version: v1
+  description: |
+    The Konnektr Graph API is compatible with the Azure Digital Twins Data Plane REST API.
+    This is a placeholder OpenAPI definition. Replace this file with the latest version from your pipeline.
+servers:
+  - url: https://your-graph-name.api.graph.konnektr.io
+paths:
+  /digitaltwins/{id}:
+    get:
+      summary: Get Digital Twin
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+    put:
+      summary: Create or Replace Digital Twin
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+    patch:
+      summary: Update Digital Twin
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+    delete:
+      summary: Delete Digital Twin
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted
+  /query:
+    post:
+      summary: Query Digital Twins
+      responses:
+        '200':
+          description: Success

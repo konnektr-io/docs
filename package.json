@@ -23,6 +23,7 @@
     "clsx": "^2.1.1",
     "fumadocs-core": "15.8.1",
     "fumadocs-mdx": "12.0.1",
+    "fumadocs-openapi": "^10.1.4",
     "fumadocs-ui": "15.8.1",
     "isbot": "^5.1.31",
     "lucide-react": "^0.544.0",
@@ -31,6 +32,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router": "^7.9.3",
+    "shiki": "^3.20.0",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
