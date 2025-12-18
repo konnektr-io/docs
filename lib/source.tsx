@@ -11,18 +11,10 @@ import { toFumadocsSource } from "fumadocs-mdx/runtime/server";
 import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons";
 import { openapi } from "@/lib/openapi";
 
-export const source = loader(
-  multiple({
-    docs: docs.toFumadocsSource(),
-    openapi: await openapiSource(openapi, {
-      baseDir: "openapi/(generated)",
-    }),
-  }),
-  {
-    baseUrl: "/docs",
-    plugins: [pageTreeCodeTitles(), lucideIconsPlugin(), openapiPlugin()],
-  }
-);
+export const source = loader(docs.toFumadocsSource(), {
+  baseUrl: "/docs",
+  plugins: [pageTreeCodeTitles(), lucideIconsPlugin(), openapiPlugin()],
+});
 
 function pageTreeCodeTitles(): LoaderPlugin {
   return {
@@ -57,7 +49,7 @@ export function getPageImage(page: InferPageType<typeof source>) {
 }
 
 export async function getLLMText(page: InferPageType<typeof source>) {
-  if (page.data.type === "openapi") return null;
+  if (page.data._openapi) return null;
   const processed = await page.data.getText("processed");
 
   return `# ${page.data.title}
