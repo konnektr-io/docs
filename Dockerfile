@@ -16,7 +16,6 @@ COPY tsconfig.json ./
 COPY mdx-components.tsx ./
 COPY source.config.ts ./
 COPY source.generated.ts ./
-COPY components.json ./
 
 # Copy source code
 COPY ./app ./app
