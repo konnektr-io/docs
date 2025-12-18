@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { blog } from "@/lib/source";
 import { PathUtils } from "fumadocs-core/source";
-import BannerImage from "./banner.png";
-import Image from "next/image";
+// import BannerImage from "./banner.png";
+// import Image from "next/image";
 
 function getName(path: string) {
   return PathUtils.basename(path, PathUtils.extname(path));
@@ -18,12 +18,12 @@ export default function Page() {
   return (
     <main className="mx-auto w-full max-w-page px-4 pb-12 md:py-12">
       <div className="relative dark mb-4 aspect-[3.2] p-8 z-2 md:p-12">
-        <Image
+        {/* <Image
           src={BannerImage}
           priority
           alt="banner"
           className="absolute inset-0 size-full -z-1 object-cover"
-        />
+        /> */}
         <h1 className="mb-4 text-3xl text-landing-foreground font-mono font-medium">
           Fumadocs Blog
         </h1>
