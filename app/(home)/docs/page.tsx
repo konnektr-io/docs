@@ -4,8 +4,8 @@ import { Card, Cards } from 'fumadocs-ui/components/card';
 
 export default function DocsPage() {
   return (
-    <div className="container py-12 md:py-24">
-      <div className="flex flex-col items-center text-center mb-16 px-4">
+    <main className="mx-auto w-full max-w-page px-6 py-12 md:py-24">
+      <div className="flex flex-col items-center text-center mb-24">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
           Konnektr <span className="text-primary">Docs</span>
         </h1>
@@ -129,6 +129,6 @@ export default function DocsPage() {
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

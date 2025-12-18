@@ -50,12 +50,13 @@ export default function Layout({ children }: LayoutProps<"/">) {
                 <Link href="/docs">Documentation</Link>
               </NavbarMenuTrigger>
               <NavbarMenuContent>
-                <NavbarMenuLink href="/docs/graph" className="md:row-span-2">
-                  <div className="-mx-3 -mt-3 flex items-center justify-center h-32 bg-secondary/20 rounded-t-lg">
-                    <Database className="h-12 w-12 text-primary" />
+                <NavbarMenuLink href="/docs/graph/getting-started" className="md:row-span-2 group">
+                  <div className="-mx-3 -mt-3 flex items-center justify-center h-32 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent rounded-t-lg transition-colors group-hover:from-primary/30 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-grid-white/[0.02] dark:bg-grid-white/[0.05]" />
+                    <img src="/graph-icon.png" alt="Konnektr Graph" className="h-16 w-16 relative z-10 drop-shadow-2xl transition-transform group-hover:scale-110" />
                   </div>
-                  <p className="font-medium">Konnektr Graph</p>
-                  <p className="text-fd-muted-foreground text-sm">
+                  <p className="font-medium mt-2">Konnektr Graph</p>
+                  <p className="text-fd-muted-foreground text-sm leading-relaxed">
                     High-performance, Azure Digital Twins compatible graph database.
                   </p>
                 </NavbarMenuLink>
@@ -82,31 +83,34 @@ export default function Layout({ children }: LayoutProps<"/">) {
                   </p>
                 </NavbarMenuLink>
 
-                <div className="lg:col-start-3 lg:row-span-2 flex flex-col gap-2 p-2">
-                  <p className="text-xs font-semibold text-fd-muted-foreground uppercase px-2 mb-1">
+                <div className="lg:col-start-3 lg:row-start-1 lg:row-span-2 flex flex-col p-2 pt-6">
+                  <p className="text-[10px] font-bold text-fd-muted-foreground uppercase tracking-widest px-2 mb-3">
                     Other Products
                   </p>
-                  <Link href="/docs/ktrlplane" className="flex items-center gap-2 p-2 rounded-md hover:bg-fd-accent text-sm">
-                    <LayoutDashboard className="h-4 w-4" />
-                    <span>KtrlPlane</span>
-                  </Link>
-                  <Link href="/docs/db-query-operator" className="flex items-center gap-2 p-2 rounded-md hover:bg-fd-accent text-sm">
-                    <Terminal className="h-4 w-4" />
-                    <span>DB Query Operator</span>
-                  </Link>
-                  <Link href="/docs/jexl" className="flex items-center gap-2 p-2 rounded-md hover:bg-fd-accent text-sm">
-                    <Code2 className="h-4 w-4" />
-                    <span>Jexl Extended</span>
-                  </Link>
-                  <div className="mt-auto pt-2 border-t flex flex-col gap-1">
-                     <span className="text-[10px] text-fd-muted-foreground px-2">COMING SOON</span>
-                     <div className="flex items-center gap-2 p-2 opacity-50 text-sm">
+                  <div className="flex flex-col gap-1">
+                    <Link href="/docs/ktrlplane" className="flex items-center gap-3 p-2 rounded-lg hover:bg-fd-accent transition-colors text-sm group">
+                      <LayoutDashboard className="h-4 w-4 text-fd-muted-foreground group-hover:text-primary transition-colors" />
+                      <span className="font-medium">KtrlPlane</span>
+                    </Link>
+                    <Link href="/docs/db-query-operator" className="flex items-center gap-3 p-2 rounded-lg hover:bg-fd-accent transition-colors text-sm group">
+                      <Terminal className="h-4 w-4 text-fd-muted-foreground group-hover:text-primary transition-colors" />
+                      <span className="font-medium">DB Query Operator</span>
+                    </Link>
+                    <Link href="/docs/jexl" className="flex items-center gap-3 p-2 rounded-lg hover:bg-fd-accent transition-colors text-sm group">
+                      <Code2 className="h-4 w-4 text-fd-muted-foreground group-hover:text-primary transition-colors" />
+                      <span className="font-medium">Jexl Extended</span>
+                    </Link>
+                  </div>
+                  
+                  <div className="mt-6 pt-4 border-t border-fd-border/50 flex flex-col gap-1">
+                     <p className="text-[10px] font-bold text-fd-muted-foreground/50 uppercase tracking-widest px-2 mb-2">COMING SOON</p>
+                     <div className="flex items-center gap-3 p-2 opacity-40 text-sm grayscale">
                         <Hammer className="h-4 w-4" />
-                        <span>Assembler</span>
+                        <span className="font-medium">Assembler</span>
                      </div>
-                     <div className="flex items-center gap-2 p-2 opacity-50 text-sm">
+                     <div className="flex items-center gap-3 p-2 opacity-40 text-sm grayscale">
                         <Waypoints className="h-4 w-4" />
-                        <span>Flow</span>
+                        <span className="font-medium">Flow</span>
                      </div>
                   </div>
                 </div>
