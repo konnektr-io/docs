@@ -18,13 +18,12 @@ export default function DocsPage() {
         <div className="flex items-center justify-between mb-8 px-4">
           <div>
             <h2 className="text-2xl font-semibold mb-2 flex items-center gap-2">
-              <Database className="h-6 w-6 text-primary" />
               Konnektr Graph
             </h2>
             <p className="text-fd-muted-foreground">The heart of your digital twin ecosystem.</p>
           </div>
           <Link 
-            href="/docs/graph" 
+            href="/docs/graph/getting-started" 
             className="text-primary hover:underline flex items-center gap-1 font-medium hidden sm:flex"
           >
             Go to Graph Docs <ArrowRight className="h-4 w-4" />

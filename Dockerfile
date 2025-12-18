@@ -15,7 +15,6 @@ COPY package.json pnpm-lock.yaml ./
 COPY tsconfig.json ./
 COPY mdx-components.tsx ./
 COPY source.config.ts ./
-COPY source.generated.ts ./
 
 # Copy source code
 COPY ./app ./app
