@@ -12,6 +12,14 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   weight: ["300", "400", "500", "600", "700"],
 });
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  icons: {
+    icon: "/konnektr.svg",
+  },
+};
+
 export default function Layout({ children }: LayoutProps<"/">) {
   // Read GTM ID from env var (must be NEXT_PUBLIC_*)
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID;

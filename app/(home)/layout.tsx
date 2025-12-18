@@ -6,8 +6,8 @@ import {
   NavbarMenuTrigger,
 } from "fumadocs-ui/layouts/home/navbar";
 import { baseOptions, linkItems } from "@/lib/layout.shared";
-import { Book, ComponentIcon, Pencil, PlusIcon, Server } from "lucide-react";
-import Link from "fumadocs-core/link";
+import { Book, ComponentIcon, Pencil, PlusIcon, Server, Database, LayoutDashboard, Terminal, Code2, Waypoints, Compass, Zap, Hammer } from "lucide-react";
+import Link from "next/link";
 
 export default function Layout({ children }: LayoutProps<"/">) {
   return (
@@ -20,14 +20,24 @@ export default function Layout({ children }: LayoutProps<"/">) {
           text: "Documentation",
           items: [
             {
-              text: "Getting Started",
-              url: "/docs/ui",
-              icon: <Book />,
+              text: "Konnektr Graph",
+              url: "/docs/graph",
+              icon: <Database />,
             },
             {
-              text: "Components",
-              url: "/docs/ui/components",
-              icon: <ComponentIcon />,
+              text: "KtrlPlane",
+              url: "/docs/ktrlplane",
+              icon: <LayoutDashboard />,
+            },
+            {
+              text: "DB Query Operator",
+              url: "/docs/db-query-operator",
+              icon: <Terminal />,
+            },
+            {
+              text: "Jexl Extended",
+              url: "/docs/jexl",
+              icon: <Code2 />,
             },
           ],
         },
@@ -37,71 +47,69 @@ export default function Layout({ children }: LayoutProps<"/">) {
           children: (
             <NavbarMenu>
               <NavbarMenuTrigger>
-                <Link href="/docs/ui">Documentation</Link>
+                <Link href="/docs">Documentation</Link>
               </NavbarMenuTrigger>
               <NavbarMenuContent>
-                <NavbarMenuLink href="/docs/ui" className="md:row-span-2">
-                  <div className="-mx-3 -mt-3">
-                    {/* <Image
-                      src={Preview}
-                      alt="Preview"
-                      className="rounded-t-lg object-cover"
-                      style={{
-                        maskImage:
-                          "linear-gradient(to bottom,white 60%,transparent)",
-                      }}
-                    /> */}
+                <NavbarMenuLink href="/docs/graph" className="md:row-span-2">
+                  <div className="-mx-3 -mt-3 flex items-center justify-center h-32 bg-secondary/20 rounded-t-lg">
+                    <Database className="h-12 w-12 text-primary" />
                   </div>
-                  <p className="font-medium">Getting Started</p>
+                  <p className="font-medium">Konnektr Graph</p>
                   <p className="text-fd-muted-foreground text-sm">
-                    Learn to use Fumadocs on your docs site.
+                    High-performance, Azure Digital Twins compatible graph database.
                   </p>
                 </NavbarMenuLink>
 
                 <NavbarMenuLink
-                  href="/docs/ui/components"
+                  href="/docs/graph/getting-started/quickstart"
                   className="lg:col-start-2"
                 >
-                  <ComponentIcon className="bg-fd-primary text-fd-primary-foreground p-1 mb-2 rounded-md" />
-                  <p className="font-medium">Components</p>
+                  <Zap className="bg-fd-primary text-fd-primary-foreground p-1 mb-2 rounded-md" />
+                  <p className="font-medium">Quick Start</p>
                   <p className="text-fd-muted-foreground text-sm">
-                    Add interactive experience to your docs.
+                    Get your digital twin runtime running in minutes.
                   </p>
                 </NavbarMenuLink>
 
                 <NavbarMenuLink
-                  href="/docs/ui/openapi"
+                  href="/docs/graph/concepts/dtdl"
                   className="lg:col-start-2"
                 >
-                  <Server className="bg-fd-primary text-fd-primary-foreground p-1 mb-2 rounded-md" />
-                  <p className="font-medium">OpenAPI</p>
+                  <Book className="bg-fd-primary text-fd-primary-foreground p-1 mb-2 rounded-md" />
+                  <p className="font-medium">DTDL & Models</p>
                   <p className="text-fd-muted-foreground text-sm">
-                    Generate interactive playgrounds and docs for your OpenAPI
-                    schema.
+                    Learn about Digital Twins Definition Language.
                   </p>
                 </NavbarMenuLink>
 
-                <NavbarMenuLink
-                  href="/docs/ui/markdown"
-                  className="lg:col-start-3 lg:row-start-1"
-                >
-                  <Pencil className="bg-fd-primary text-fd-primary-foreground p-1 mb-2 rounded-md" />
-                  <p className="font-medium">Markdown</p>
-                  <p className="text-fd-muted-foreground text-sm">
-                    Learn the writing format/syntax of Fumadocs.
+                <div className="lg:col-start-3 lg:row-span-2 flex flex-col gap-2 p-2">
+                  <p className="text-xs font-semibold text-fd-muted-foreground uppercase px-2 mb-1">
+                    Other Products
                   </p>
-                </NavbarMenuLink>
-
-                <NavbarMenuLink
-                  href="/docs/ui/manual-installation"
-                  className="lg:col-start-3 lg:row-start-2"
-                >
-                  <PlusIcon className="bg-fd-primary text-fd-primary-foreground p-1 mb-2 rounded-md" />
-                  <p className="font-medium">Manual Installation</p>
-                  <p className="text-fd-muted-foreground text-sm">
-                    Setup Fumadocs for your existing Next.js app.
-                  </p>
-                </NavbarMenuLink>
+                  <Link href="/docs/ktrlplane" className="flex items-center gap-2 p-2 rounded-md hover:bg-fd-accent text-sm">
+                    <LayoutDashboard className="h-4 w-4" />
+                    <span>KtrlPlane</span>
+                  </Link>
+                  <Link href="/docs/db-query-operator" className="flex items-center gap-2 p-2 rounded-md hover:bg-fd-accent text-sm">
+                    <Terminal className="h-4 w-4" />
+                    <span>DB Query Operator</span>
+                  </Link>
+                  <Link href="/docs/jexl" className="flex items-center gap-2 p-2 rounded-md hover:bg-fd-accent text-sm">
+                    <Code2 className="h-4 w-4" />
+                    <span>Jexl Extended</span>
+                  </Link>
+                  <div className="mt-auto pt-2 border-t flex flex-col gap-1">
+                     <span className="text-[10px] text-fd-muted-foreground px-2">COMING SOON</span>
+                     <div className="flex items-center gap-2 p-2 opacity-50 text-sm">
+                        <Hammer className="h-4 w-4" />
+                        <span>Assembler</span>
+                     </div>
+                     <div className="flex items-center gap-2 p-2 opacity-50 text-sm">
+                        <Waypoints className="h-4 w-4" />
+                        <span>Flow</span>
+                     </div>
+                  </div>
+                </div>
               </NavbarMenuContent>
             </NavbarMenu>
           ),
