@@ -1,5 +1,7 @@
 {
     "title": "Jexl",
+    "root": true,
+    "description": "JavaScript Expression Language",
     "pages": [
         "playground",
         "reference",
