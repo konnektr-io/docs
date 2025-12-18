@@ -5,7 +5,7 @@ FROM node:lts-alpine AS builder
 ARG GTM_ID
 ENV NEXT_PUBLIC_GTM_ID=$GTM_ID
 
-# Install dependencies needed for build (git for fumadocs lastModified)
+# Install git for fumadocs lastModified plugin
 RUN apk add --no-cache git
 
 # Install pnpm
@@ -13,14 +13,12 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-# Copy configuration files first
+# Install dependencies with scripts ignored to avoid "vite" module errors
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
-# Copy all source code
+# Copy all source and build the app
 COPY . .
-
-# Build the Next.js app (Next.js standalone mode is enabled in next.config.mjs)
 RUN pnpm build
 
 ### ---- Runtime Stage ----
@@ -35,7 +33,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nextjs -u 1001
 
-# Copy standalone build and static assets
+# Copy standalone build
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
@@ -47,5 +45,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# server.js is created by Next.js standalone output
 CMD ["node", "server.js"]
