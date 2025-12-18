@@ -1,5 +1,7 @@
 {
     "title": "KtrlPlane",
+    "root": true,
+    "description": "Cloud control plane",
     "pages": [
         "getting-started",
         "concepts",
