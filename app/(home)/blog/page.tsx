@@ -26,7 +26,7 @@ export default function Page() {
   );
 
   return (
-    <main className="mx-auto w-full max-w-page px-6 py-12 md:py-24">
+    <main className="mx-auto w-full max-w-[--fd-layout-width] px-6 py-12 md:py-24">
       <div className="flex flex-col items-center text-center mb-16 px-4">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
           Konnektr <span className="text-primary">Blog</span>
