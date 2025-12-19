@@ -1,0 +1,188 @@
+---
+title: Introducing Konnektr Graph — open-source digital twins on PostgreSQL
+description: "We're launching Konnektr Graph: a semantic property graph database built on PostgreSQL + Apache AGE, compatible with the Azure Digital Twins API and designed for both digital twin systems and AI agents."
+date: 2025-12-19
+author: Niko Raes
+---
+
+## The problem we kept running into
+
+If you've tried to build **digital twins** in a real enterprise environment, you've probably felt this tension:
+
+- You want a **graph database** because the world is connected: assets, locations, processes, sensors, people, constraints.
+- You want **operational boring** because this is infrastructure: backups, monitoring, HA, permissions, audits.
+- You want to avoid **vendor lock-in**, because “core system of record” and “can't migrate” shouldn't be in the same sentence.
+- You want data that's actually usable for **AI agents**: not a pile of unvalidated strings, but structured context that stays consistent over time.
+
+And yet, the options often force trade-offs:
+
+- Managed graph offerings can be great, but the moment your solution becomes critical, pricing and portability start to matter.
+- General-purpose graph engines sometimes come with new operational surfaces, new query languages, and new reliability concerns.
+- "AI memory" systems are frequently built on top of documents alone, which can be fine—until you need guarantees like *model validation*, *relationships*, and *governance*.
+
+We built Konnektr because we kept wanting the same thing: an open, reliable foundation for digital twin systems, without turning every project into a long-term platform bet.
+
+## The journey (and the “why” behind it)
+
+Konnektr didn't start as a “let's build a company” idea. It started as a recurring pattern we saw while working with digital twin projects: the moment you go from a proof-of-concept to production, the requirements get serious.
+
+You need:
+
+- A **model** (and a language to express it) so your team can agree on what a “Pump” or “Station” means.
+- A **graph** so you can traverse from one part of the system to another (and answer questions you didn't anticipate on day one).
+- A **platform** you can run for years, where upgrades and outages don't feel like existential risks.
+
+We spent a lot of time with the Azure Digital Twins ecosystem: DTDL models, the API surface, and the official SDKs. And while that experience was productive, it also highlighted a gap:
+
+> Many teams want the Azure Digital Twins developer experience, but they also want control: open source, portability, and predictable operations.
+
+So we decided to build Konnektr in the open—starting with the piece that everything else depends on: the graph.
+
+## What we built: Konnektr Graph
+
+Today we're launching **Konnektr Graph**, our flagship product and the first major building block of the Konnektr platform.
+
+Konnektr Graph is a **semantic property graph** database that:
+
+- Runs on **PostgreSQL** with **Apache AGE** for graph capabilities
+- Is **Azure Digital Twins API compatible**, so you can use the official Azure SDKs
+- Has **DTDL** model validation built in (because model drift is real)
+- Supports “read for AI agents” workflows via **hybrid vector + graph search**
+- Deploys in minutes as a managed service or as a self-hosted database
+- Uses **Apache 2.0** licensing and is fully open source
+
+If you've ever wished you could keep the same digital twin programming model while simplifying operations and keeping portability, this is for you.
+
+## Why PostgreSQL + Apache AGE?
+
+This was a deliberate choice, and it's central to how we think about infrastructure.
+
+### PostgreSQL is the “boring” we want
+
+PostgreSQL has earned its place in production stacks for a reason:
+
+- Reliability and durability are proven.
+- Your team already has tooling: migrations, backups, monitoring, observability, access control.
+- Your platform team can operate it without learning a brand new operational playbook.
+
+For infrastructure-critical systems—like digital twin platforms—**open source is non-negotiable**. PostgreSQL is one of the best examples of what open source looks like when it's trusted at the highest levels.
+
+### Extensions are a superpower, not a hack
+
+Digital twins rarely live alone. You often want the graph plus:
+
+- **pgvector** for AI embeddings and similarity search
+- **PostGIS** for spatial data (assets on a map, routes, zones, proximity)
+- Mature Postgres features: indexing, partitioning, roles, RLS, logical replication
+
+By building on Postgres, you can evolve your stack without replacing it.
+
+### Apache AGE gives us a property graph on Postgres
+
+Apache AGE adds property graph capabilities (nodes, edges, properties) as a Postgres extension. That matters because it keeps the “center of gravity” where most teams are already comfortable: PostgreSQL.
+
+We're intentionally focusing on a pragmatic sweet spot:
+
+- A property graph you can traverse and query efficiently
+- Without moving your data into a separate specialized system
+- While preserving the operational maturity of Postgres
+
+## Why Azure Digital Twins API compatibility?
+
+It's simple: we want developers to ship.
+
+The Azure Digital Twins API and SDKs are a well-known interface for building digital twin applications. A lot of teams have already written code around these clients, patterns, and models.
+
+Konnektr Graph is designed to be a **drop-in replacement** at the API level:
+
+- Use the official Azure SDKs for .NET, Python, and JavaScript
+- Keep your existing integration patterns
+- Typically, you only change configuration (like the service endpoint), not your application logic
+
+This also keeps the ecosystem approachable: you can onboard engineers faster, and you don't need to introduce an “exotic query language” as your primary API contract.
+
+## Model validation matters (especially for AI)
+
+A lot of systems look fine until you ask them to scale across teams.
+
+Without validation, digital twin graphs slowly accumulate inconsistencies:
+
+- Missing required properties
+- Twins created with the wrong model
+- Relationships that violate your domain rules
+- “Temporary” fields that become permanent
+
+DTDL-based validation gives you a way to keep a shared language between teams and tools—and it makes downstream use (including AI agent workflows) much more trustworthy.
+
+We're building Konnektr Graph to be a place where you can store context and still have confidence in it months later.
+
+## Who Konnektr Graph is for
+
+We built Konnektr Graph for developers and technical decision-makers who want a solid foundation for connected data.
+
+Some of the use cases we're targeting from day one:
+
+- **Digital twin infrastructure**: water networks, traffic systems, rail, smart cities
+- **IoT platforms**: device hierarchies, telemetry relationships, dependency graphs
+- **AI agent knowledge bases**: structured semantic context without the complexity of RDF-heavy stacks
+- **Complex business relationships**: org charts, supply chains, project dependencies, ownership and responsibility graphs
+
+If you need to answer questions like “what is impacted if this asset fails?” or “what does this sensor influence?” or “what should an agent consider before taking action?”, a semantic property graph is a strong fit.
+
+## Operational simplicity (because you'll run this for years)
+
+Konnektr Graph is meant to feel like a Postgres workload:
+
+- Standard PostgreSQL operations for backups and restores
+- Familiar monitoring and metrics pipelines
+- A clear path to production hardening (roles, permissions, HA patterns)
+
+You shouldn't have to choose between “graph” and “operational sanity.”
+
+## How to try it today
+
+You can get started in a few different ways:
+
+- Deploy Konnektr Graph (managed): https://ktrlplane.konnektr.io/resources/create?resource_type=Konnektr.Graph
+- Product page: https://konnektr.io/graph
+- Documentation: https://docs.konnektr.io
+- GitHub (source + issues): https://github.com/konnektr-io/pg-age-digitaltwins
+
+We also offer a simple pricing model for managed hosting:
+
+- Free tier: **500 twins**
+- Standard tier: **$99/month** for **1M twins**
+
+Self-hosting is always free.
+
+## Trade-offs and what's still evolving
+
+This is a launch, not a finish line.
+
+Building a semantic property graph on PostgreSQL + Apache AGE is powerful, but it comes with real engineering work:
+
+- Some workloads need careful indexing and query tuning (as they do in Postgres generally).
+- Compatibility is a journey: we're prioritizing the core Azure Digital Twins API surface and expanding coverage based on real user needs.
+- Hybrid search for AI agents is evolving fast; we're building the primitives, and we expect the community to help shape what “good” looks like in practice.
+
+Our promise is not "everything on day one." Our promise is openness, a strong foundation, and steady progress—made in public.
+
+## What's next for Konnektr
+
+Konnektr Graph is the first product in a broader open-source platform we're building:
+
+- **Assembler** — an AI-powered digital twin builder
+- **Flow** — real-time data and event orchestration
+- **Compass** — analytics and insights for digital twin systems
+
+The goal is a cohesive toolbox where you can go from “we have assets and telemetry” to “we have a governed twin graph and intelligent automation” without stitching together a dozen proprietary components.
+
+## Help us build this in public
+
+If Konnektr Graph resonates with you, we'd love your input—especially early, when it can shape the roadmap.
+
+- Try a deployment and tell us what felt easy or painful: https://konnektr.io/graph
+- Skim the docs and point out gaps: https://docs.konnektr.io
+- Open issues, request features, or contribute code: https://github.com/konnektr-io/pg-age-digitaltwins
+
+This is the beginning. If you're building digital twins, an IoT platform, or an AI agent system that needs trustworthy context, we'd love to build alongside you.
