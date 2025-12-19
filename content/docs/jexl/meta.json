@@ -3,6 +3,7 @@
     "root": true,
     "description": "JavaScript Expression Language",
     "pages": [
+        "introduction",
         "playground",
         "reference",
         "language",
