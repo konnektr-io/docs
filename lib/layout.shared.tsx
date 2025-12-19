@@ -16,7 +16,7 @@ export function baseOptions(): BaseLayoutProps {
       title: (
         <div className="flex items-center gap-2 font-semibold text-lg hover:opacity-80 transition-opacity">
           <img src="/konnektr.svg" alt="Konnektr Logo" className="h-7 w-7" />
-          <span className="hidden sm:inline">Konnektr</span>
+          <span className="hidden sm:inline text-foreground">Konnektr</span>
         </div>
       ),
       url: "https://konnektr.io",
