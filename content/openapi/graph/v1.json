@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "http://demo.api.graph.konnektr.io/"
+      "url": "https://demo.api.graph.konnektr.io/"
     }
   ],
   "paths": {
@@ -21,7 +21,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JsonElement"
+                "$ref": "#/components/schemas/QueryRequest"
               }
             }
           },
@@ -29,7 +29,14 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageOfJsonDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -57,7 +64,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JsonDocument"
+                  "$ref": "#/components/schemas/BasicDigitalTwin"
                 }
               }
             }
@@ -84,7 +91,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JsonDocument"
+                "$ref": "#/components/schemas/BasicDigitalTwin"
               }
             }
           },
@@ -96,7 +103,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JsonDocument"
+                  "$ref": "#/components/schemas/BasicDigitalTwin"
                 }
               }
             }
@@ -189,7 +196,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JsonDocument"
+                  "$ref": "#/components/schemas/BasicDigitalTwinComponent"
                 }
               }
             }
@@ -392,7 +399,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JsonDocument"
+                  "$ref": "#/components/schemas/BasicRelationship"
                 }
               }
             }
@@ -427,7 +434,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JsonDocument"
+                "$ref": "#/components/schemas/BasicRelationship"
               }
             }
           },
@@ -439,7 +446,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JsonDocument"
+                  "$ref": "#/components/schemas/BasicRelationship"
                 }
               }
             }
@@ -863,6 +870,31 @@
   },
   "components": {
     "schemas": {
+      "BasicDigitalTwin": {},
+      "BasicDigitalTwinComponent": {},
+      "BasicRelationship": {
+        "type": "object",
+        "properties": {
+          "$relationshipId": {
+            "type": "string"
+          },
+          "$targetId": {
+            "type": "string"
+          },
+          "$sourceId": {
+            "type": "string"
+          },
+          "$relationshipName": {
+            "type": "string"
+          },
+          "$etag": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
       "DigitalTwinsModelData": {
         "required": [
           "id",
@@ -1049,6 +1081,20 @@
       "JsonDocument": {},
       "JsonElement": {},
       "JsonPatch": {},
+      "PageOfJsonDocument": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array"
+          },
+          "continuationToken": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
       "PageWithNextLinkOfImportJob": {
         "type": "object",
         "properties": {
@@ -1104,6 +1150,23 @@
             ]
           },
           "instance": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "QueryRequest": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "continuationToken": {
             "type": [
               "null",
               "string"
