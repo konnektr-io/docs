@@ -2,8 +2,17 @@ import Link from "next/link";
 import { blog } from "@/lib/source";
 import { PathUtils } from "fumadocs-core/source";
 import { ArrowRight } from "lucide-react";
+import { createMetadata } from "@/lib/metadata";
 // import BannerImage from "./banner.png";
 // import Image from "next/image";
+
+export function generateMetadata() {
+  return createMetadata({
+    title: "Konnektr Blog - Product & Tech Updates",
+    description:
+      "Product updates, technical insights, and digital twin ecosystem news from the Konnektr team.",
+  });
+}
 
 function getName(path: string) {
   return PathUtils.basename(path, PathUtils.extname(path));
@@ -36,12 +45,22 @@ export default function Page() {
           >
             <div className="flex flex-col h-full">
               <div className="mb-4 flex items-center justify-between">
-                <span className="text-[10px] font-bold text-primary uppercase tracking-widest px-3 py-1 bg-primary/10 rounded-full">Article</span>
+                <span className="text-[10px] font-bold text-primary uppercase tracking-widest px-3 py-1 bg-primary/10 rounded-full">
+                  Article
+                </span>
                 <p className="text-xs text-fd-muted-foreground font-medium">
-                  {new Date(post.data.date ?? getName(post.path)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  {new Date(
+                    post.data.date ?? getName(post.path)
+                  ).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
                 </p>
               </div>
-              <h2 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors leading-tight">{post.data.title}</h2>
+              <h2 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors leading-tight">
+                {post.data.title}
+              </h2>
               <p className="text-fd-muted-foreground text-sm leading-relaxed mb-6 line-clamp-3">
                 {post.data.description}
               </p>
@@ -50,7 +69,9 @@ export default function Page() {
                   Read more <ArrowRight className="h-3 w-3" />
                 </span>
                 {post.data.author && (
-                   <span className="text-xs text-fd-muted-foreground">By {post.data.author}</span>
+                  <span className="text-xs text-fd-muted-foreground">
+                    By {post.data.author}
+                  </span>
                 )}
               </div>
             </div>
