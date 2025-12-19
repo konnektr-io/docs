@@ -1,0 +1,11 @@
+{
+  "$schema": "..\\..\\.source\\json-schema\\docs.meta.json",
+  "title": "Konnektr",
+  "root": true,
+  "pages": [
+    "graph",
+    "ktrlplane",
+    "db-query-operator",
+    "jexl"
+  ]
+}

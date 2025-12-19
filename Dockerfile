@@ -1,66 +1,48 @@
-# ---- Build Stage ----
+### ---- Build Stage ----
 FROM node:lts-alpine AS builder
 
 # Accept build arguments
 ARG GTM_ID
-ENV VITE_GTM_ID=$GTM_ID
+ENV NEXT_PUBLIC_GTM_ID=$GTM_ID
+
+# Install git for fumadocs lastModified plugin
+RUN apk add --no-cache git
 
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-# Copy package files and workspace config
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY react-router.config.ts ./
-COPY vite.config.ts ./
-COPY tsconfig.json ./
-COPY mdx-components.tsx ./
-COPY source.config.ts ./
-COPY source.generated.ts ./
-COPY components.json ./
+# Install dependencies with scripts ignored to avoid "vite" module errors
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
-# Copy source code
-COPY ./app ./app
-COPY ./content ./content
-COPY ./public ./public
-
-# Install dependencies
-RUN pnpm install --frozen-lockfile
-
-# Verify GTM_ID is set (for debugging)
-RUN echo "Building with VITE_GTM_ID: $VITE_GTM_ID"
-
-# Build the React Router SSR app
+# Copy all source and build the app
+COPY . .
 RUN pnpm build
 
-# ---- Runtime Stage ----
+### ---- Runtime Stage ----
 FROM node:lts-alpine AS runtime
-
-# Install pnpm in runtime image
-RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-# Copy package files for production dependencies
-COPY package.json pnpm-lock.yaml ./
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# Install only production dependencies
-RUN pnpm install --frozen-lockfile --prod
-
-# Copy built application from builder stage
-COPY --from=builder /app/build ./build
-
-# Copy public assets (if needed by the SSR server)
-COPY --from=builder /app/public ./public
-
-# Create non-root user for security
+# Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
-    adduser -S reactrouter -u 1001
+    adduser -S nextjs -u 1001
 
-USER reactrouter
+# Copy standalone build
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-EXPOSE 8080
+USER nextjs
 
-# Start the React Router SSR server (Cloud Run will inject $PORT)
-CMD ["pnpm", "run", "start"]
+EXPOSE 3000
+
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+CMD ["node", "server.js"]
