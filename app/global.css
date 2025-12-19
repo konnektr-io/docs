@@ -46,7 +46,6 @@
   --brand-gray: oklch(0.45 0.01 240); /* Neutral gray */
   --brand-light: oklch(0.98 0.001 240); /* Light text/backgrounds */
 
-  /* Fumadocs Layout Variables for TOC positioning */
   --fd-banner-height: 0px;
   --fd-nav-height: 56px; /* Header height */
   --fd-sidebar-width: 0px; /* Sidebar width is set in docslayout */
