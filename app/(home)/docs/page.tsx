@@ -155,7 +155,7 @@ export default function DocsPage() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
           <Link
-            href="https://ktrlplane.konnektr.io/resources/create?resource_type=Konnektr.Graph"
+            href="https://ktrlplane.konnektr.io/resources/create?resource_type=Konnektr.Graph&utm_source=docs&utm_medium=referral&utm_campaign=docs-portal"
             className="px-8 py-3 bg-fd-background text-fd-foreground rounded-full font-semibold hover:opacity-90 transition-opacity"
           >
             Deploy Graph Now

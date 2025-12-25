@@ -5,9 +5,6 @@ date: 2025-12-25
 author: Niko Raes
 ---
 
-
-# Real-Time Events Meet Time-Travel Queries: Konnektr Graph's New Superpowers
-
 **Building the bridge between live digital twins and intelligent memory**
 
 Today we're announcing two major features for Konnektr Graph that transform it from a graph database into a complete temporal knowledge platform: **Event Notifications** and **Data History**. Together, they enable you to build reactive systems that respond to changes in real-time while maintaining perfect memory of everything that's ever happened.
@@ -198,7 +195,7 @@ When using Azure Data Explorer or Fabric, Data History creates three tables:
 - Source and target twin IDs
 - Relationship type and when it changed
 
-You can query these tables to reconstruct your graph at any point in time. Check out our [Data History with Azure Data Explorer guide](/docs/graph/guides/data-history-kusto) for complete examples.
+You can query these tables to reconstruct your graph at any point in time. Check out our [Data History with Azure Data Explorer guide](/docs/graph/how-to-guides/data-history-kusto) for complete examples.
 
 Other stoerage options are already supported through Kafka routing. Direct integration with other databases is coming soon.
 
@@ -263,10 +260,10 @@ A municipal water utility uses Konnektr Graph to manage their distribution netwo
 
 Event Notifications and Data History are available now for all Konnektr Graph Standard tier instances ($99/mo).
 
-- **Deploy Graph with Events**: https://ktrlplane.konnektr.io/resources/create?resource_type=Konnektr.Graph
-- **Documentation**: https://docs.konnektr.io/docs/graph/concepts/event-routing
-- **Kusto Guide**: https://docs.konnektr.io/docs/graph/guides/data-history-kusto
-- **GitHub**: https://github.com/konnektr-io/pg-age-digitaltwins
+- [**Deploy Graph with Events**](https://ktrlplane.konnektr.io/resources/create?resource_type=Konnektr.Graph&utm_source=blog&utm_medium=referral&utm_campaign=event-history-launch)
+- [**Documentation**](/docs/graph/concepts/event-routing)
+- [**Kusto Guide**](/docs/graph/how-to-guides/data-history-kusto)
+- [**GitHub**](https://github.com/konnektr-io/pg-age-digitaltwins)
 
 We're particularly interested in feedback from teams building:
 - AI agents that need temporal reasoning
@@ -285,8 +282,3 @@ Welcome to the future of temporal graph intelligence.
 ---
 
 **About the Author**: Niko Raes is the founder of Konnektr and has been building digital twin and IoT platforms at Arcadis for years, with deep experience in linked data, ontologies, and real-world infrastructure monitoring.
-
-**Resources:**
-- [Event Routing Documentation](/docs/graph/concepts/event-routing)
-- [Kusto Data History Guide](/docs/graph/how-to-guides/data-history-kusto)
-- [Deploy Konnektr Graph](https://ktrlplane.konnektr.io/resources/create?resource_type=Konnektr.Graph&utm_source=blog&utm_medium=referral&utm_campaign=event-history-launch)
