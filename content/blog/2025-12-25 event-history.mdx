@@ -1,0 +1,292 @@
+---
+title: "Real-Time Events Meet Time-Travel Queries: Konnektr Graph's New Superpowers"
+description: "Announcing Event Notifications and Data History in Konnektr Graph: enabling temporal memory for digital twins and AI agents."
+date: 2025-12-25
+author: Niko Raes
+---
+
+
+# Real-Time Events Meet Time-Travel Queries: Konnektr Graph's New Superpowers
+
+**Building the bridge between live digital twins and intelligent memory**
+
+Today we're announcing two major features for Konnektr Graph that transform it from a graph database into a complete temporal knowledge platform: **Event Notifications** and **Data History**. Together, they enable you to build reactive systems that respond to changes in real-time while maintaining perfect memory of everything that's ever happened.
+
+If you're building AI agents that need to reason about time, digital twins that trigger automation, or analytical systems that need to answer "what was the state at 3 AM last Tuesday?"—this changes everything.
+
+Available now for all Standard tier instances ($99/mo).
+
+## The Problem: Living in the Eternal Present
+
+Most graph databases give you a powerful snapshot of *right now*. Query the current state, traverse relationships, run analytics. But the moment something changes, the past is gone.
+
+This creates real problems:
+
+**For digital twin systems:**
+- "Which valve was open when the pressure spike occurred?"
+- "Show me the dependency chain as it existed before the network reconfiguration"
+- "What was the configuration of the system when this anomaly was detected?"
+
+**For AI agents:**
+- "What changed since you last checked?"
+- "Has this relationship existed before?"
+- "Show me the pattern of changes over the last week"
+
+**For reactive automation:**
+- "Trigger maintenance workflow when this twin's temperature exceeds threshold"
+- "Send alerts when critical relationships are deleted"
+- "Archive all changes to compliance storage in real-time"
+
+You need two capabilities that seem contradictory: **instant reactions** to changes, and **perfect memory** of historical state.
+
+## What We Built: Event Streams + Time Machine
+
+### Event Notifications: React to Change in Real-Time
+
+Every mutation in your graph—twin created, property updated, relationship deleted—now generates a real-time event notification that can be routed to:
+
+- **Kafka / Azure Event Hubs / Fabric Event Streams**: Stream to data pipelines, analytics platforms, or other microservices
+- **MQTT**: Integrate with IoT platforms and edge systems
+- **Webhooks**: Trigger automation, send alerts, or integrate with any HTTP endpoint
+- **Azure Data Explorer (Kusto) / Fabric Real-Time Intelligence**: Archive to time-series analytics
+
+Events conform to the CloudEvents 1.0 specification, making them interoperable with the entire cloud-native ecosystem.
+
+**Event types include:**
+- Twin lifecycle (create/delete)
+- Twin property changes (with JSON patch format)
+- Relationship lifecycle (create/delete)
+- Relationship property changes
+- Telemetry messages
+
+### Data History: Query Any Point in Time
+
+While events flow in real-time, Data History automatically archives every change to Azure Data Explorer (Kusto), Microsoft Fabric Real-Time Intelligence, or any Kafka-compatible endpoint where you can store it in your preferred database.
+
+This unlocks powerful capabilities:
+
+**Temporal queries:**
+```kusto
+// Reconstruct the graph as it existed at a specific timestamp
+AdtPropertyEvents
+| where TimeStamp <= datetime(2025-01-15 14:30:00)
+| summarize arg_max(TimeStamp, *) by Id, Key
+```
+
+**Change analysis:**
+```kusto
+// Find all twins whose temperature exceeded 80°C in the last 24 hours
+AdtPropertyEvents
+| where TimeStamp > ago(24h)
+| where Key == "temperature" and todouble(Value) > 80
+| distinct Id
+```
+
+**Impact tracing:**
+```kusto
+// Show relationship changes affecting a critical asset
+AdtRelationshipLifeCycleEvents
+| where Source == "CriticalPump_01" or Target == "CriticalPump_01"
+| where TimeStamp > ago(7d)
+| order by TimeStamp desc
+```
+
+## The Hybrid Graph Advantage: Where AI Meets Time
+
+Here's where things get interesting. Konnektr Graph isn't just a digital twin database—it's positioned at the intersection of **validated knowledge graphs** and **AI memory systems**.
+
+You can now:
+
+1. **Store vector embeddings** as twin properties (using PostgreSQL's pgvector)
+2. **Track changes to those embeddings** over time via Data History
+3. **Query historical graph structure** using graph reconstruction
+4. **React to changes** with AI agents via real-time event notifications
+
+### Use Case: Intelligent Maintenance Prediction
+
+Imagine a manufacturing digital twin where:
+
+1. Each asset twin has a `maintenanceContext` property containing a vector embedding of recent operational data
+2. When anomalies are detected, the twin's properties update
+3. **Event notification** triggers an AI agent to investigate
+4. The agent queries **Data History** to:
+   - Reconstruct the graph topology at the time of the anomaly
+   - Retrieve historical embeddings to understand normal vs. anomalous behavior
+   - Perform similarity analysis across historical states
+5. The agent identifies patterns: "This failure mode happened 3 times before, always preceded by this relationship configuration"
+
+This is the power of **hybrid graph + vector + time-series** all working together.
+
+### Use Case: Compliance and Audit Trails
+
+For regulated industries, you need perfect auditability:
+
+- **Data History** archives every change with timestamps and context
+- Query "who changed what, when" across your entire digital twin estate
+- Prove compliance by reconstructing system state at any historical point
+- Export audit trails directly for regulatory reporting
+
+### Use Case: AI Agent Memory with Temporal Context
+
+AI agents need more than just current state—they need *memory of change*:
+
+- **Agent queries graph**: "Show me all sensors related to Zone-7"
+- **Event notification triggers**: "Temperature sensor in Zone-7 just updated"
+- **Agent checks history**: "Has this sensor's value changed this rapidly before?"
+- **Agent reasons temporally**: "Last time this happened, the downstream chiller failed 2 hours later"
+
+The combination of real-time events and historical queries gives agents genuine temporal reasoning ability.
+
+## Storage Options for Data History
+
+Data History uses an optimized event format that can be stored anywhere:
+
+**Azure Data Explorer / Fabric Real-Time Intelligence:**
+Kusto provides native graph query capabilities, allowing you to reconstruct historical graph topology and run graph algorithms on past data. Combined with vector similarity search, it's the most powerful option for temporal analytics.
+
+**Your Own Storage:**
+Route DataHistory events to Kafka, then store in:
+- PostgreSQL with TimescaleDB (time-series optimized)
+- InfluxDB (IoT telemetry focus)
+- ClickHouse (high-performance analytics)
+- Parquet files in data lakes (long-term archival)
+- Any database your team already operates
+
+The flexibility means you can choose the storage backend that fits your infrastructure and compliance requirements.
+
+## How Event Routing Works
+
+Konnektr Graph captures every change to your digital twin graph and routes those changes as CloudEvents to external systems.
+
+**Event Sinks** define where events should be sent—Kafka brokers, MQTT brokers, webhook endpoints, or Azure Data Explorer clusters. You configure connection details and authentication for each sink.
+
+**Event Routes** define which events flow to which sinks. You can have multiple routes to the same sink with different event formats:
+- `EventNotification` format: Full CloudEvents with complete details (for real-time monitoring and automation)
+- `DataHistory` format: Optimized flat structure for time-series storage (for historical analysis)
+
+All events conform to the CloudEvents 1.0 standard, making them interoperable with the entire cloud-native ecosystem—Azure Event Grid, Knative Eventing, Apache Kafka, AWS EventBridge, and any CloudEvents-compatible consumer.
+
+## Configuration: Simple and Secure
+
+### Managed (Konnektr Cloud)
+
+Setting up events is point-and-click in our platform:
+
+1. **Settings Tab**: Define event sinks (Kafka, Kusto, MQTT, Webhooks)
+2. **Event Routes Tab**: Configure which events go where
+3. **Deploy**: Changes apply instantly
+
+For Data History with Azure Data Explorer:
+1. Connect your cluster with secure service principal credentials
+2. We automatically create and manage the historical tables
+3. Start querying immediately
+
+All credentials are stored securely and never exposed.
+
+## Data History Tables: Your Time Machine
+
+When using Azure Data Explorer or Fabric, Data History creates three tables:
+
+**AdtPropertyEvents** - Twin property changes over time
+- Every property update with timestamp
+- Supports JSON values for complex properties
+
+**AdtTwinLifeCycleEvents** - Twin creation and deletion
+- Complete twin metadata at time of lifecycle event
+
+**AdtRelationshipLifeCycleEvents** - Relationship creation and deletion  
+- Source and target twin IDs
+- Relationship type and when it changed
+
+You can query these tables to reconstruct your graph at any point in time. Check out our [Data History with Azure Data Explorer guide](/docs/graph/guides/data-history-kusto) for complete examples.
+
+Other stoerage options are already supported through Kafka routing. Direct integration with other databases is coming soon.
+
+## What This Means for Your Architecture
+
+**Before:** 
+- Graph database for current state
+- Separate event bus for real-time reactions  
+- Separate time-series DB for history
+- Complex integration to keep everything synchronized
+
+**After:**
+- Konnektr Graph handles event generation
+- Route to your choice of destinations
+- Single source of truth for all changes
+- Query current and historical state seamlessly
+
+## Real-World Use Case: Smart City Water Network
+
+A municipal water utility uses Konnektr Graph to manage their distribution network:
+
+**Real-Time Operations:**
+- Pressure sensor updates trigger events
+- AI agent monitors for leak patterns via event notifications
+- Webhook alerts maintenance teams when anomalies detected
+
+**Historical Analysis:**
+- Data History archives all sensor readings and valve state changes
+- Kusto queries identify seasonal patterns
+- Reconstruct network state during past incidents for root cause analysis
+
+**Predictive Maintenance:**
+- Agent retrieves 6 months of historical data from Kusto
+- Identifies pipes with degrading flow characteristics
+- Schedules maintenance before failures occur
+
+**Compliance Reporting:**
+- Export complete audit trail of all network changes
+- Prove compliance with water quality regulations
+- Show exact state of system during any inspection
+
+## Getting Started
+
+**Enable Event Notifications:**
+1. Navigate to your Graph instance settings
+2. Add event sinks (Kafka, MQTT, Webhooks)
+3. Configure event routes
+4. Events start flowing immediately
+
+**Enable Data History:**
+1. Connect Azure Data Explorer or Fabric Real-Time Intelligence
+2. Configure table names and ingestion policies
+3. Historical archiving begins automatically
+4. Query via Kusto Query Language (KQL)
+
+**Pricing:**
+- Event notifications: Included in Standard tier ($99/mo)
+- Data History: Requires Standard tier + your Kusto/Fabric costs
+- Self-hosted: Always free
+
+## Try It Today
+
+Event Notifications and Data History are available now for all Konnektr Graph Standard tier instances ($99/mo).
+
+- **Deploy Graph with Events**: https://ktrlplane.konnektr.io/resources/create?resource_type=Konnektr.Graph
+- **Documentation**: https://docs.konnektr.io/docs/graph/concepts/event-routing
+- **Kusto Guide**: https://docs.konnektr.io/docs/graph/guides/data-history-kusto
+- **GitHub**: https://github.com/konnektr-io/pg-age-digitaltwins
+
+We're particularly interested in feedback from teams building:
+- AI agents that need temporal reasoning
+- Digital twin systems with compliance requirements
+- Reactive automation workflows
+- Time-series analytics on graph data
+
+## What's Next
+
+Event Notifications and Data History are the foundation for building digital twins that truly understand time. We're excited to see what you build with these capabilities.
+
+This transforms Konnektr Graph from a static database into a living, breathing knowledge system that remembers everything and reacts instantly.
+
+Welcome to the future of temporal graph intelligence.
+
+---
+
+**About the Author**: Niko Raes is the founder of Konnektr and has been building digital twin and IoT platforms at Arcadis for years, with deep experience in linked data, ontologies, and real-world infrastructure monitoring.
+
+**Resources:**
+- [Event Routing Documentation](/docs/graph/concepts/event-routing)
+- [Kusto Data History Guide](/docs/graph/how-to-guides/data-history-kusto)
+- [Deploy Konnektr Graph](https://ktrlplane.konnektr.io/resources/create?resource_type=Konnektr.Graph&utm_source=blog&utm_medium=referral&utm_campaign=event-history-launch)
