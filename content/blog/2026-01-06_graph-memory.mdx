@@ -1,0 +1,387 @@
+---
+title: "Validated Semantic Memory for AI Agents: Introducing the Konnektr MCP Server"
+date: 2026-01-06
+author: "Niko Raes"
+description: "Why agents need schema-enforced graph memory, not just vector embeddings—and how the Konnektr MCP Server provides validated semantic context that agents can trust to both read and write."
+tags: ["AI Agents", "MCP", "Context Graphs", "Semantic Memory", "DTDL"]
+---
+
+In our [recent post about context graphs](https://docs.konnektr.io/blog/2025-12-30_context_graphs), we described the infrastructure challenge of the agent era: **agents need more than systems of record—they need decision traces, precedent chains, and contextual memory that captures not just what happened, but why.**
+
+Today, we're releasing the **Konnektr MCP Server**—a Model Context Protocol implementation that gives agents direct access to validated semantic memory. Not just vector embeddings, but schema-enforced knowledge graphs where agents can trust the context they both consume and generate.
+
+## The Problem: Why Vector-Only Memory Fails Agents
+
+Most "AI memory" solutions today follow a simple pattern:
+1. Ingest documents and conversations
+2. Generate embeddings
+3. Store in vector database
+4. Retrieve via similarity search
+
+This works for RAG (Retrieval-Augmented Generation), but it breaks down when agents need to **write** memory, not just read it.
+
+### The Validation Gap
+
+When an agent writes new context—capturing a decision trace, linking entities, recording precedents—nothing prevents:
+
+- **Contradictory information**: Agent writes "Customer-789 is tier: premium" when another write says "tier: enterprise"
+- **Broken references**: Entity gets deleted but relationships pointing to it remain
+- **Invalid types**: Agent writes `temperature: "very hot"` when schema expects a number
+- **Relationship mismatches**: Agent links a Customer to a Building when ontology only allows Customers → Persons, Accounts
+
+Vector databases don't validate structure. Embeddings can contradict. References can break. **Context degrades into noise.**
+
+This is catastrophic for autonomous agents. If an agent can't trust its own memory, it can't make reliable decisions.
+
+## Validated Semantic Memory: The Schema-Enforced Approach
+
+Konnektr Graph enforces ontologies using DTDL (Digital Twins Definition Language). Every entity, property, and relationship must conform to a schema.
+
+When an agent writes to the graph through the MCP server:
+- **Entities are validated**: Properties must match defined types
+- **Relationships are constrained**: Can only link compatible entity types
+- **Schemas are enforced**: Invalid structures are rejected with detailed error messages
+
+But we don't sacrifice semantic search. **Embeddings are properties on entities**, not in a separate database. Agents get:
+- Vector similarity search (semantic)
+- Graph relationship traversal (structural)
+- Both combined in hybrid queries
+
+This is the foundation for agents that can trust their memory.
+
+## Introducing the Konnektr MCP Server
+
+The Model Context Protocol (MCP), created by Anthropic, provides a standard way for agents to access context—files, databases, APIs, knowledge bases. Our MCP server implements this protocol for Konnektr Graph.
+
+Instead of writing Cypher queries or managing API calls, agents use simple tools that handle:
+- Schema validation
+- Embedding generation
+- Hybrid search (vector + graph)
+- Ontology exploration
+
+Let's see how this works in practice.
+
+## How Agents Use Validated Semantic Memory
+
+### 1. Exploring the Ontology
+
+Before creating entities, agents explore available schemas:
+
+```python
+# Agent discovers what models exist
+models = await mcp_client.call_tool("list_models")
+# Returns: [{"id": "dtmi:example:Customer;1", "displayName": "Customer"}, ...]
+
+# Agent inspects a specific model
+customer_model = await mcp_client.call_tool("get_model", {
+    "model_id": "dtmi:example:Customer;1"
+})
+# Returns full schema: properties, relationships, required fields
+```
+
+The agent now knows:
+- What properties `Customer` has (tier, revenue, etc.)
+- Which embeddings can be stored (descriptionEmbedding)
+- What relationships are allowed (hasContact → Person, hasAccount → Account)
+- What types are expected (tier is enum, revenue is number)
+
+**This is fundamentally different from vector-only approaches.** The agent understands structure before writing.
+
+### 2. Creating Validated Entities with Embeddings
+
+When an agent learns new information, it creates a validated entity:
+
+```python
+# Agent creates a customer with embedding
+result = await mcp_client.call_tool("create_or_replace_digital_twin", {
+    "twin_id": "customer-789",
+    "model_id": "dtmi:example:Customer;1",
+    "properties": {
+        "name": "Acme Corp",
+        "tier": "enterprise",
+        "revenue": 2400000
+    },
+    "embeddings": {
+        "descriptionEmbedding": "Large enterprise customer in manufacturing. Primary contact is Sarah Chen. Recent churn risk due to 3 P1 incidents in last 30 days."
+    }
+})
+```
+
+What happens behind the scenes:
+2. **Embedding generation**: Converts text to vector
+1. **Schema validation**: Graph API refuses data if it doesn't match model
+3. **Storage**: Embedding stored as an indexed property on the twin (not separate database)
+
+If the agent tries to add invalid properties or wrong types, the server **rejects it with a detailed error message**. The graph stays consistent.
+
+### 3. Hybrid Search: Vector Similarity + Graph Traversal
+
+Now the magic happens. Agents can query using both semantic similarity and structural relationships:
+
+```python
+# Find customers similar to a query, with graph context
+results = await mcp_client.call_tool("vector_search_with_graph", {
+    "search_text": "customers at risk of churning due to service issues",
+    "embedding_property": "descriptionEmbedding",
+    "model_id": "dtmi:example:Customer;1",
+    "include_graph_context": True,
+    "limit": 5
+})
+```
+
+This returns:
+- **Semantically similar customers** (via vector search on embeddings)
+- **Related entities** via graph relationships (account managers, recent incidents, contracts)
+
+One query, structured context with semantic relevance.
+
+Compare this to vector-only RAG:
+```python
+# Traditional vector search
+docs = vector_db.search("customers at risk of churning", limit=5)
+# Returns: Unstructured text chunks with no guaranteed relationships
+```
+
+The agent gets floating text, no validated connections, no guarantee of accuracy.
+
+### 4. Agents Writing Decision Traces
+
+Here's where it gets powerful. When an agent makes a decision, it captures the trace as a validated entity:
+
+```python
+# Agent captures a discount approval decision
+decision = await mcp_client.call_tool("create_or_replace_digital_twin", {
+    "twin_id": "decision-20250104-001",
+    "model_id": "dtmi:example:DecisionTrace;1",
+    "properties": {
+        "decisionType": "discount_approval",
+        "approvedBy": "sarah.chen@company.com",
+        "discountPercent": 20,
+        "policyVersion": "v3.2",
+        "exceptionReason": "churn_risk"
+    },
+    "embeddings": {
+        "reasoningEmbedding": "Customer threatened to move to Competitor-X. Three P1 incidents in 30 days. Matches precedent from Account-123. Revenue preservation ($2.4M) justifies exception."
+    }
+})
+
+# Create validated relationships
+await mcp_client.call_tool("create_or_replace_relationship", {
+    "relationship_id": "rel-decision-customer",
+    "source_id": "decision-20250104-001",
+    "target_id": "customer-789",
+    "relationship_name": "appliedTo"
+})
+
+await mcp_client.call_tool("create_or_replace_relationship", {
+    "relationship_id": "rel-decision-precedent",
+    "source_id": "decision-20250104-001",
+    "target_id": "decision-20241115-042",
+    "relationship_name": "basedOn"
+})
+```
+
+Now:
+- The decision is **structurally linked** to the customer (validated relationship)
+- Precedent chain is **explicit and traversable**
+- Future agents can query: "Show decisions similar to this one" (vector) AND "Show all decisions affecting Customer-789" (graph)
+
+**This is the context graph pattern in action.** Deterministic data from systems of record + agent-augmented decision traces, all validated by schemas.
+
+### 5. Retrieving Context for New Decisions
+
+When a renewal agent encounters Customer-789 again, it retrieves rich context:
+
+```python
+# Hybrid query: semantic + structural
+context = await mcp_client.call_tool("query_digital_twins", {
+    "query": """
+        MATCH (customer:Twin {`$dtId`: 'customer-789'})
+        MATCH (customer)-[:hasIncident]->(incident:Twin)
+        WHERE incident.createdAt > datetime() - duration('P30D')
+        MATCH (decision:Twin)-[:appliedTo]->(customer)
+        WHERE decision.`$metadata`.`$model` = 'dtmi:example:DecisionTrace;1'
+        RETURN customer, collect(incident) as recent_incidents, collect(decision) as past_decisions
+    """
+})
+```
+
+The agent gets:
+- Validated customer properties
+- Recent incidents (with timestamps, severity, status)
+- Past decisions with reasoning embeddings
+
+All structured, all validated, all trustworthy.
+
+## The Technical Architecture
+
+### Why PostgreSQL + Apache AGE + pgvector?
+
+**PostgreSQL**: Your team already knows it. Standard operations, proven reliability.
+
+**Apache AGE**: Graph extension providing Cypher queries and graph algorithms.
+
+**pgvector**: Vector similarity search directly in PostgreSQL.
+
+**One database, three capabilities**: Graph traversal + vector search + relational queries.
+
+No separate vector database to synchronize. No eventual consistency. Atomic transactions for validated writes.
+
+### How Embedding Generation Works
+
+The MCP server handles embedding generation transparently:
+
+1. Agent provides **text content** in `embeddings` parameter
+2. Server generates vectors and stores them
+3. Embeddings stored as **properties on the twin**
+4. Available immediately for vector search
+
+Agents don't manage embeddings directly—the server handles vectorization while maintaining schema validation.
+
+### Schema Validation in Practice
+
+When an agent creates or updates a twin, the MCP server:
+
+1. **Validates model exists**: Checks DTDL model is defined
+2. **Validates properties**: All properties match schema (type, enum values, required fields)
+3. **Validates relationships**: Relationship types and targets are compatible
+4. **Rejects invalid writes**: Returns detailed error messages
+
+Example validation error:
+```json
+{
+  "error": "Invalid property 'tier'. Expected enum ['enterprise', 'standard', 'startup'], got 'premium'",
+  "model": "dtmi:example:Customer;1",
+  "property": "tier"
+}
+```
+
+The agent learns from the error and retries with valid data. **The graph never degrades.**
+
+## Real-World Agent Patterns
+
+### Pattern 1: Support Agent with Precedent Memory
+
+Support agent encounters a technical issue. It:
+1. Searches for similar past incidents (vector similarity)
+2. Traverses relationships to find affected customers
+3. Retrieves decision traces showing how similar issues were resolved
+4. Captures new resolution as a decision trace for future reference
+
+The agent builds organizational memory over time.
+
+### Pattern 2: Sales Agent with Customer Context
+
+Renewal agent preparing for negotiation:
+1. Retrieves customer profile (validated properties)
+2. Gets related incidents, contracts, previous discount approvals
+3. Finds similar customers and their outcomes (vector search)
+4. Generates proposal based on precedent
+5. Captures approval decision as validated trace
+
+Next renewal cycle, this precedent informs future decisions.
+
+### Pattern 3: Infrastructure Agent with Dependency Awareness
+
+An agent managing server restarts:
+1. Queries graph: "What applications run on Server-01?"
+2. Traverses dependencies: "What downstream services depend on those apps?"
+3. Checks incident history: "Have similar restarts caused issues before?"
+4. Executes with validated understanding of impact
+
+The graph provides **structural awareness** that vector-only memory can't.
+
+## Integration with Agent Frameworks
+
+The MCP server works with any MCP-compatible client:
+
+### Claude Desktop / Cline
+Add to MCP settings:
+```json
+{
+  "mcpServers": {
+    "konnektr": {
+      "url": "https://mcp.graph.konnektr.io/mcp?resource_id=your-graph-instance-id",
+    }
+  }
+}
+```
+
+### Google ADK (Agent Developer Kit)
+```python
+from google.adk.tools.mcp_tool import MCPToolset
+
+konnektr_tools = MCPToolset(
+    connection_params=StreamableHTTPConnectionParams(
+        url="https://mcp.graph.konnektr.io/mcp?resource_id=your-graph-instance-id",
+        headers={
+            "Authorization": f"Bearer {token}"
+        }
+    )
+)
+
+agent = Agent(
+    model="gemini-2.0-flash",
+    tools=[konnektr_tools],
+    instruction="You have access to validated semantic memory via Konnektr..."
+)
+```
+
+### LangChain / LlamaIndex (via MCP)
+Coming soon: Native integration examples.
+
+### Custom Agents (REST API)
+The MCP server exposes standard HTTP/SSE endpoints for custom implementations.
+
+## Why This Matters for Agent Autonomy
+
+As agents move from retrieval assistants to autonomous decision-makers, memory architecture becomes critical.
+
+**Vector-only memory** worked for chatbots because humans verified every output. But autonomous agents need **validated semantic structure**:
+
+- **Trustworthy context**: Schema enforcement prevents contradictions
+- **Relationship awareness**: Graph traversal provides structural understanding
+- **Temporal precedent**: Decision traces create searchable organizational memory
+- **Hybrid intelligence**: Combine similarity (vector) with structure (graph)
+
+This is the infrastructure for agents that can **learn from decisions, not just documents**.
+
+## Getting Started
+
+The Konnektr MCP server is available now for all Konnektr Graph instances (Standard tier, $99/mo).
+
+### Quick Start
+
+1. **Deploy Konnektr Graph**: [ktrlplane.konnektr.io](https://ktrlplane.konnektr.io/resources/create?resource_type=Konnektr.Graph&utm_source=blog&utm_medium=referral&utm_campaign=graph-memory)
+2. **Enable MCP**: Configure in your Graph instance settings
+3. **Connect your agent**: Add MCP server to Claude Desktop or your agent framework
+4. **Define ontologies**: Create DTDL models for your domain (or use an agent to do it)
+5. **Let agents build memory**: Agents create validated entities and relationships
+
+### Documentation
+
+- **MCP Server Docs**: [docs.konnektr.io/docs/graph/concepts/mcp-server](https://docs.konnektr.io/docs/graph/concepts/mcp-server)
+- **DTDL Guide**: [docs.konnektr.io/docs/graph/concepts/dtdl](https://docs.konnektr.io/docs/graph/concepts/dtdl)
+- **API Reference**: [docs.konnektr.io/docs/graph/api](https://docs.konnektr.io/docs/graph/reference/api)
+
+### Example Repositories
+
+- **MCP Server Code**: [github.com/konnektr-io/pg-age-digitaltwins](https://github.com/konnektr-io/graph-mcp)
+- **Integration Examples**: Coming soon (Google ADK, LangChain, LlamaIndex)
+
+## What's Next
+
+We're building the validated semantic memory layer for autonomous agents. This MCP server is the first direct integration—agents can now read and write context with guaranteed structural integrity.
+
+Next, we're working on:
+- **Reference implementations** with popular agent frameworks
+- **Pattern libraries** for common agent architectures (support, sales, infrastructure)
+- **Collaboration primitives** for multi-agent systems sharing validated memory
+
+If you're building agents that need more than floating embeddings—agents that need validated semantic structure they can trust—we'd love to hear what you're building.
+
+---
+
+**About Konnektr**: We're building the infrastructure layer for context graphs—validated semantic memory for AI agents. 100% open source, built on PostgreSQL, designed for agent autonomy.
+
+**Try it today**: [konnektr.io/graph](https://konnektr.io?utm_source=blog&utm_medium=referral&utm_campaign=graph-memory)
