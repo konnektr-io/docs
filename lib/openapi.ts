@@ -1,6 +1,2 @@
-import { createOpenAPI } from "fumadocs-openapi/server";
-
-export const openapi = createOpenAPI({
-  input: ["./content/openapi/graph/v1.json"],
-  proxyUrl: "/api/proxy",
-});
+// OpenAPI references have been removed (Graph was the only API documented).
+// This file is intentionally empty.
