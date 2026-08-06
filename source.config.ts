@@ -7,6 +7,7 @@ import {
 } from "fumadocs-mdx/config";
 import jsonSchema from "fumadocs-mdx/plugins/json-schema";
 import lastModified from "fumadocs-mdx/plugins/last-modified";
+import { remarkMdxMermaid } from "fumadocs-core/mdx-plugins";
 import { z } from "zod";
 
 // You can customise Zod schemas for frontmatter and `meta.json` here
@@ -44,6 +45,6 @@ export default defineConfig({
     lastModified(),
   ],
   mdxOptions: {
-    // MDX options
+    remarkPlugins: [remarkMdxMermaid],
   },
 });
