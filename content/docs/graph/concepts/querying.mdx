@@ -1,0 +1,85 @@
+---
+title: Querying the Graph
+icon: Search
+---
+
+AgeDigitalTwins supports two query languages:
+
+1. **Azure Digital Twins Query Language**: Refer to the [official documentation](https://learn.microsoft.com/en-us/azure/digital-twins/concepts-query-language).
+2. **Cypher**: Built on Apache AGE, Cypher queries provide powerful graph querying capabilities.
+
+The used query language is automatically detected based on the query syntax.
+
+## Cypher Query Language for Digital Twins
+
+### Basic Queries
+
+- Find all twins:
+
+  ```cypher
+  MATCH (t:Twin) RETURN t;
+  ```
+
+- Find relationships:
+
+  ```cypher
+  MATCH (t:Twin)-[r]->(m:Model) RETURN t, r, m;
+  ```
+
+### Using `digitaltwins.is_of_model`
+
+- Find twins of a specific model:
+
+  ```cypher
+  MATCH (t:Twin) WHERE digitaltwins.is_of_model(t, 'dtmi:com:adt:dtsample:room;1') RETURN t;
+  ```
+
+## ADT Query Functions and Cypher Equivalents
+
+| ADT Query Function | Cypher Equivalent |
+|---------------------|-------------------|
+| `IS_OF_MODEL`      | `digitaltwins.is_of_model` |
+| `STARTSWITH`       | `STARTS WITH`     |
+| `ENDSWITH`         | `ENDS WITH`       |
+| `CONTAINS`         | `CONTAINS`        |
+| `IS_NULL`          | `IS NULL`         |
+| `IS_DEFINED`       | `IS NOT NULL`     |
+
+## Parameterized Queries
+
+Cypher queries support parameterized placeholders (`$param`) to safely pass dynamic values:
+
+### HTTP API
+
+Include a `parameters` object in the request body:
+
+```json
+{
+  "query": "MATCH (t:Twin) WHERE t.temperature > $minTemp RETURN t",
+  "parameters": {
+    "minTemp": 25.0
+  }
+}
+```
+
+Parameters support the following value types:
+- **Primitives**: strings, numbers, booleans, null
+- **Arrays**: lists of values (e.g. `["a", "b", "c"]`)
+- **Objects**: nested maps/dictionaries (e.g. `{"color": "blue", "size": 100}`)
+
+### SDK Usage
+
+Pass a dictionary as the second argument to `QueryAsync<T>`:
+
+```csharp
+var result = await client.QueryAsync<JsonDocument>(
+    "MATCH (t:Twin { `$dtId`: $id }) RETURN t",
+    new Dictionary<string, object?> { { "id", "myTwinId" } }
+).FirstOrDefaultAsync();
+```
+
+### Continuation Tokens
+
+Parameters are automatically embedded in continuation tokens for pagination. You only need to supply parameters on the first request; subsequent pages reuse them transparently.
+
+For more examples, refer to the [QueryTests.cs](../src/AgeDigitalTwins.Test/QueryTests.cs) and [AdtQueryToCypherTests.cs](../src/AgeDigitalTwins.Test/AdtQueryToCypherTests.cs).
