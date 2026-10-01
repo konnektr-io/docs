@@ -1,0 +1,14 @@
+{
+    "title": "Graph",
+    "description": "Semantic graph database for digital twins and AI Agents",
+    "root": true,
+    "pages": [
+        "introduction",
+        "getting-started",
+        "concepts",
+        "how-to-guides",
+        "deployment-installation",
+        "advanced-topics",
+        "reference"
+    ]
+}
