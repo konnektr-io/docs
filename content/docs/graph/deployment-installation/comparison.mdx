@@ -1,0 +1,79 @@
+---
+title: Deployment Topologies
+icon: Scale
+description: Compare the ways to run Konnektr Graph on your own infrastructure — bundled database or external PostgreSQL, single instance or HA.
+---
+
+Konnektr Graph is always self-hosted. The choice is not *whether* to manage infrastructure,
+but *how much of it* one Helm chart should own.
+
+## Quick recommendation
+
+- **Evaluating or single-team use** → chart-managed PostgreSQL (`cluster.enabled=true`),
+  one instance, API enabled, Events disabled.
+- **Production, one database for several services** → external PostgreSQL
+  (`cluster.enabled=false`), chart manages only the API and Events.
+- **High availability** → 3-instance CloudNativePG cluster across zones, 2+ API replicas.
+
+## Bundled vs external database
+
+| | Chart-managed cluster (`cluster.enabled=true`) | External PostgreSQL (`cluster.enabled=false`) |
+|---|---|---|
+| **Who runs PostgreSQL** | CloudNativePG operator, via this chart | You |
+| **Upgrades** | `helm upgrade` (operator rolls pods) | Your DBA process |
+| **Backups** | Configure CNPG object storage | Your existing tooling |
+| **Extension install** | AGE + pgvector from the chart's image catalog | You install and create AGE/pgvector per database |
+| **Multiple apps on one database** | Awkward — the chart owns the cluster | Natural |
+| **Best for** | Getting started, single-purpose clusters | Platforms with an existing database estate |
+
+Requirements when bringing your own database: PostgreSQL 16/17/18, the Apache AGE
+extension available, and a role allowed to create the graph and its label tables.
+
+## Single instance vs high availability
+
+| | Single instance | HA |
+|---|---|---|
+| **Instances** | `cluster.cluster.instances: 1` | `3` (odd, across zones) |
+| **Read-only service** | none — keep `api.database.readOnlyHost: auto` | `-ro` service backed by replicas |
+| **Failover** | pod restart | automatic leader election |
+| **PodDisruptionBudget** | set `enablePDB: false` (a single instance can never satisfy `minAvailable: 1`, which blocks every drain) | leave enabled |
+| **API replicas** | 1 | 2+ behind the Service |
+
+## What the chart deploys
+
+| Component | Values key | Default | Notes |
+|---|---|---|---|
+| API | `api.enabled` | `false` | HTTP surface, `/digitaltwins`, `/entities`, `/query` |
+| Events | `events.enabled` | `false` | Consumes the WAL stream, publishes to Kafka/ADX/MQTT |
+| PostgreSQL | `cluster.enabled` | `false` | CloudNativePG `Cluster` with AGE |
+| Ingress | `api.ingress.enabled` | `false` | Classic Ingress |
+| HTTPRoute | `api.httproute.enabled` | `false` | Gateway API |
+
+Both `api.enabled` and `cluster.enabled` default to `false`, so a bare
+`helm install` creates nothing — that is deliberate, and the reason the
+[quickstart](../getting-started/quickstart) sets them explicitly.
+
+## Access paths
+
+| Path | Requires | Use when |
+|---|---|---|
+| **REST API** | `api.enabled` + a token (or auth disabled) | ADT SDKs, `graph-explorer`, anything over HTTP |
+| **`/entities/*` alias** | same as REST | Your domain has no digital-twin vocabulary |
+| **Native `Konnektr.AgeDigitalTwins` SDK** | network access to PostgreSQL | Bulk loads, direct Cypher, transactions |
+| **MCP server** | an MCP deployment pointed at the API | Agent/tool access |
+
+See [Using the Azure Digital Twins SDKs](../how-to-guides/using-azure-digital-twins-sdks)
+and the [native SDK reference](../reference/sdk).
+
+## Migration between topologies
+
+Moving from a chart-managed cluster to external PostgreSQL, or between clusters, is a
+database move:
+
+1. Export models and twins through the API or the native SDK.
+2. Provision the target PostgreSQL with AGE (and pgvector if used).
+3. Import: models first, then twins, then relationships.
+4. Repoint `api` at the new database and restart.
+
+Keep events disabled during the move, or the stream will announce changes your target does
+not have yet.

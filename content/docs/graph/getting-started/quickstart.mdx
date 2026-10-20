@@ -1,0 +1,127 @@
+---
+title: Quickstart
+icon: Rocket
+description: Deploy Konnektr Graph into your own Kubernetes cluster and store your first twin.
+---
+
+This walks you from an empty cluster to a stored twin and a query result. You need a
+Kubernetes cluster, `helm` 3.8+ (OCI support), and `kubectl`.
+
+## 1. Install the chart
+
+The chart is published as an OCI artifact. It can deploy the PostgreSQL cluster for you
+(CloudNativePG) or connect to one you already run.
+
+```bash
+helm install graph oci://ghcr.io/konnektr-io/charts/graph \
+  --namespace graph --create-namespace \
+  --set api.enabled=true \
+  --set cluster.enabled=true \
+  --set api.config.authentication.enabled=false
+```
+
+`cluster.enabled=true` asks the chart to create a CloudNativePG `Cluster` — PostgreSQL with
+the Apache AGE extension, plus pgvector. Set it to `false` if you point the chart at an
+existing database (see [Self-hosted deployment](../deployment-installation/self-host)).
+
+> Authentication is off for this first step so you can verify the plumbing. Turn it on in
+> [step 5](#5-turn-on-authentication) before anything else talks to it.
+
+## 2. Wait for the API
+
+```bash
+kubectl -n graph get pods -w
+```
+
+The API pod comes up once the database is ready and the AGE graph has been initialised.
+
+```bash
+kubectl -n graph port-forward svc/graph-api 8080:8080
+curl -s http://localhost:8080/health
+```
+
+## 3. Upload a DTDL model
+
+A twin cannot exist without a model. This is the minimal one:
+
+```bash
+cat > room.json <<'JSON'
+{
+  "@id": "dtmi:example:Room;1",
+  "@type": "Interface",
+  "@context": ["dtmi:dtdl:context;3"],
+  "displayName": "Room",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "temperature",
+      "schema": "double"
+    }
+  ]
+}
+JSON
+
+curl -s -X POST http://localhost:8080/models \
+  -H 'Content-Type: application/json' \
+  -d "[$(cat room.json)]"
+```
+
+## 4. Create and query a twin
+
+```bash
+curl -s -X PUT http://localhost:8080/digitaltwins/room-1 \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "$metadata": { "$model": "dtmi:example:Room;1" },
+        "$dtId": "room-1",
+        "temperature": 21.5
+      }'
+```
+
+Read it back, then query it with the ADT query dialect:
+
+```bash
+curl -s http://localhost:8080/digitaltwins/room-1
+
+curl -s -X POST http://localhost:8080/query \
+  -H 'Content-Type: application/json' \
+  -d '{"query": "SELECT * FROM DIGITALTWINS WHERE \$dtId = '\''room-1'\''"}'
+```
+
+The same resources are also reachable under `/entities/*`, a vocabulary-neutral alias that
+is served by identical handlers — useful when your domain has nothing to do with digital
+twins:
+
+```bash
+curl -s http://localhost:8080/entities/room-1
+```
+
+## 5. Turn on authentication
+
+The API validates JWTs from any OIDC provider. Configure the metadata address, audience and
+issuer:
+
+```yaml
+api:
+  config:
+    authentication:
+      enabled: true
+      metadataAddress: https://login.microsoftonline.com/<tenant-id>/v2.0/.well-known/openid-configuration
+      audience: api://konnektr-graph
+      issuer: https://sts.windows.net/<tenant-id>/
+```
+
+```bash
+helm upgrade graph oci://ghcr.io/konnektr-io/charts/graph -n graph -f values.yaml
+```
+
+See [Self-hosted deployment](../deployment-installation/self-host#authentication) for API
+keys, authorization providers and the details of each mode.
+
+## 6. Next
+
+- [Concepts: DTDL](../concepts/dtdl) — models, inheritance, components
+- [Querying](../concepts/querying) — the ADT dialect and raw Cypher
+- [Event routing](../concepts/event-routing) — stream changes to Kafka, ADX or MQTT
+- [Using the Azure Digital Twins SDKs](../how-to-guides/using-azure-digital-twins-sdks) —
+  connect an existing client
