@@ -1,0 +1,237 @@
+---
+title: Self-Hosted Deployment
+icon: Sailboat
+description: Deploy Konnektr Graph on Kubernetes with the Helm chart — bundled or external PostgreSQL, authentication, scaling and troubleshooting.
+---
+
+Konnektr Graph runs on Kubernetes. The chart can deploy PostgreSQL for you (CloudNativePG
+with Apache AGE) or connect to a database you already operate.
+
+## Prerequisites
+
+- Kubernetes 1.24+
+- Helm 3.8+ (the chart is published as an OCI artifact)
+- A default `StorageClass` if you let the chart create the database
+- An ingress controller or Gateway API implementation, if the API must be reachable from
+  outside the cluster
+
+For an external database: PostgreSQL 16, 17 or 18 with the Apache AGE extension available,
+plus `pgvector` if you want scoped vector memory search.
+
+## Install
+
+```bash
+helm install graph oci://ghcr.io/konnektr-io/charts/graph \
+  --namespace graph --create-namespace \
+  --set api.enabled=true \
+  --set cluster.enabled=true \
+  --set api.config.authentication.enabled=false
+```
+
+Both `api.enabled` and `cluster.enabled` default to `false` — a bare `helm install` creates
+nothing on purpose. Set them explicitly, or pass a values file:
+
+```bash
+helm install graph oci://ghcr.io/konnektr-io/charts/graph -n graph --create-namespace -f my-values.yaml
+```
+
+Verify:
+
+```bash
+kubectl -n graph get pods
+kubectl -n graph logs deploy/graph-api
+```
+
+## Configuration
+
+The important groups in `values.yaml`:
+
+| Key | What it controls |
+|---|---|
+| `api.enabled` | Deploy the HTTP API (default `false`) |
+| `api.logLevel` | `Error`, `Warning`, `Information`, `Debug`, `Trace` |
+| `api.replicaCount`, `api.autoscaling` | API scaling |
+| `api.service.type`, `api.service.port` | How the API is exposed inside the cluster |
+| `api.ingress.enabled` / `api.httproute.enabled` | Classic Ingress vs Gateway API |
+| `api.config.authentication` | OIDC/JWT or API keys ([details](#authentication)) |
+| `api.config.parameters` | Pool size, timeouts, rate limiting |
+| `api.database.readOnlyHost` | Whether the API's connection string includes the CNPG read-only service |
+| `events.enabled`, `events.config.eventSinks`, `events.config.eventRoutes` | Event streaming |
+| `cluster.enabled`, `cluster.cluster.instances`, `cluster.cluster.storage.size` | The bundled database |
+| `cluster.cluster.enablePDB` | PodDisruptionBudget (disable for single-instance clusters) |
+
+### Example values file
+
+```yaml
+api:
+  enabled: true
+  logLevel: Warning
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+  service:
+    type: ClusterIP
+    port: 8080
+  config:
+    authentication:
+      enabled: false
+cluster:
+  enabled: true
+  cluster:
+    instances: 1
+    storage:
+      size: 2Gi
+    enablePDB: false
+events:
+  enabled: false
+```
+
+The chart's `values.yaml` documents every option inline; it is the authoritative reference.
+
+## Authentication
+
+Authentication is disabled by default.
+
+### No authentication (development only)
+
+```yaml
+api:
+  config:
+    authentication:
+      enabled: false
+```
+
+### OIDC / JWT
+
+Any OpenID Connect provider — Entra ID, Keycloak, Auth0, Dex:
+
+```yaml
+api:
+  config:
+    authentication:
+      enabled: true
+      metadataAddress: https://login.microsoftonline.com/<tenant-id>/v2.0/.well-known/openid-configuration
+      audience: api://konnektr-graph
+      issuer: https://sts.windows.net/<tenant-id>/
+```
+
+### API keys
+
+For service-to-service calls without an identity provider. See the
+[configuration reference](../reference/configuration) for the exact key names, and the
+[authorization architecture](../advanced-topics/authorization-architecture) page for how
+permissions are evaluated when authorization is enabled.
+
+## Using the native SDK
+
+Self-hosting gives you the option of bypassing HTTP entirely with the
+`Konnektr.AgeDigitalTwins` .NET package, which talks to PostgreSQL directly:
+
+```bash
+dotnet add package Konnektr.AgeDigitalTwins
+```
+
+```csharp
+using AgeDigitalTwins;
+using Npgsql;
+
+var dataSource = NpgsqlDataSource.Create(
+    "Host=localhost;Username=postgres;Password=...;Database=postgres");
+var client = new AgeDigitalTwinsClient(dataSource, "digitaltwins");
+
+var models = await client.GetModelsAsync();
+var twin = await client.GetDigitalTwinAsync("sensor-001");
+```
+
+Direct access trades the HTTP hop for a database connection: lower latency, native Cypher
+and transactions, but no per-request authorization layer — your credentials decide what a
+caller can do.
+
+## Post-deployment checks
+
+```bash
+kubectl -n graph get pods -l app=graph-api
+kubectl -n graph port-forward svc/graph-api 8080:8080
+curl -s http://localhost:8080/health
+```
+
+Then upload a model and a twin — the [quickstart](../getting-started/quickstart) has the
+exact calls.
+
+## Monitoring
+
+- `/health` for liveness and readiness (the chart's probes already use it)
+- Prometheus-format metrics from the API
+- OpenTelemetry traces via `api.openTelemetry.exporterEndpoint`
+- JSON logs with correlation IDs
+
+```yaml
+api:
+  openTelemetry:
+    enabled: true
+    exporterEndpoint: http://otel-collector.opentelemetry.svc.cluster.local:4317
+```
+
+## Scaling and availability
+
+```yaml
+api:
+  replicaCount: 3
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+cluster:
+  cluster:
+    instances: 3
+```
+
+The API is stateless and scales horizontally; the database is the bottleneck. On a
+single-instance database set `cluster.cluster.enablePDB: false` — a one-instance cluster can
+never satisfy `minAvailable: 1`, and CNPG then blocks every drain (node upgrades, reboots).
+
+Backups are not managed by this chart. Use CloudNativePG's object-store backup support (or
+your existing PostgreSQL tooling) against the cluster it creates.
+
+## Troubleshooting
+
+```bash
+kubectl -n graph describe pod <pod>
+kubectl -n graph logs <pod> --previous
+
+# database reachable and extension present?
+kubectl -n graph exec -it <api-pod> -- \
+  psql "$ConnectionStrings__Age" -c "SELECT extversion FROM pg_extension WHERE extname='age';"
+
+# slow queries?
+kubectl -n graph exec -it <db-pod> -- psql -c "SELECT * FROM pg_stat_activity WHERE state='active';"
+```
+
+Common causes: the database is not ready when the API starts (the pod retries — check
+`/health`), the AGE extension is missing from an external database, or `cluster.enabled` and
+an external connection string are both set.
+
+## Security
+
+- Enable authentication before exposing the API outside the cluster
+- Put the API behind the ingress/HTTPRoute rather than a `NodePort`
+- Keep SASL passwords and connection strings in Secrets via `extraEnv`
+- Apply NetworkPolicies so only the API reaches PostgreSQL
+- Terminate TLS at the gateway; the API itself speaks plain HTTP
+
+## Support
+
+- [GitHub Discussions](https://github.com/konnektr-io/graph/discussions)
+- [GitHub Issues](https://github.com/konnektr-io/graph/issues)
+- [Advanced topics](../advanced-topics/)
+
+## Next steps
+
+- [Native SDK reference](../reference/sdk)
+- [Performance tuning](../advanced-topics/performance)
+- [Event routing](../concepts/event-routing)

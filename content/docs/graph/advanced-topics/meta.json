@@ -1,0 +1,11 @@
+{
+    "title": "Advanced Topics",
+    "icon": "Settings",
+    "description": "Advanced configuration, performance, and security topics",
+    "pages": [
+        "authorization-architecture",
+        "performance",
+        "security",
+        "logs-diagnostics"
+    ]
+}
