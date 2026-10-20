@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   Terminal,
   Code2,
+  Network,
 } from "lucide-react";
 import { Card, Cards } from "fumadocs-ui/components/card";
 import { createMetadata } from "@/lib/metadata";
@@ -23,11 +24,24 @@ export default function DocsPage() {
           Konnektr <span className="text-primary">Docs</span>
         </h1>
         <p className="text-lg md:text-xl text-fd-muted-foreground max-w-[800px] leading-relaxed">
-          Documentation for Konnektr platform tools — control planes, Kubernetes operators, and expression languages.
+          Documentation for Konnektr platform tools — semantic graph, control planes, Kubernetes operators, and expression languages.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
+        <Link
+          href="/docs/graph"
+          className="group p-6 rounded-2xl border bg-fd-card hover:bg-fd-accent transition-colors flex flex-col gap-4"
+        >
+          <Network className="h-8 w-8 text-fd-muted-foreground group-hover:text-primary transition-colors" />
+          <div>
+            <h3 className="font-semibold mb-1">Konnektr Graph</h3>
+            <p className="text-sm text-fd-muted-foreground leading-relaxed">
+              Semantic graph on PostgreSQL with Apache AGE, DTDL and an Azure Digital Twins-compatible API.
+            </p>
+          </div>
+        </Link>
+
         <Link
           href="/docs/ktrlplane"
           className="group p-6 rounded-2xl border bg-fd-card hover:bg-fd-accent transition-colors flex flex-col gap-4"

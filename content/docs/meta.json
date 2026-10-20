@@ -2,6 +2,7 @@
   "title": "Konnektr",
   "root": true,
   "pages": [
+    "graph",
     "ktrlplane",
     "db-query-operator",
     "jexl"
