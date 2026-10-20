@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.1",
   "info": {
-    "title": "AgeDigitalTwins.ApiService | v1",
+    "title": "Konnektr Graph API",
     "version": "1.0.0"
   },
   "servers": [
@@ -162,6 +162,187 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/digitaltwins": {
+      "post": {
+        "tags": [
+          "Digital Twins"
+        ],
+        "summary": "Creates or replaces digital twins in a batch operation. Payloads larger than 100 items are split internally into chunks; batches above the configurable ceiling (Parameters:MaxBatchSize, default 2000) are rejected with a 400. Larger imports must use an import job.",
+        "operationId": "CreateOrReplaceDigitalTwinsBatch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchDigitalTwinResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/digitaltwins/search": {
+      "post": {
+        "tags": [
+          "Digital Twins"
+        ],
+        "summary": "Performs a hybrid search on digital twins using vector similarity and metadata filter.",
+        "operationId": "SearchDigitalTwins",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DigitalTwinSearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/digitaltwins/memory-search": {
+      "post": {
+        "tags": [
+          "Digital Twins"
+        ],
+        "summary": "Performs a scoped vector search over digital twins. Scope predicates (model allow-list, property equality filters, related-twin predicate) are applied before ranking and Limit.",
+        "operationId": "SearchDigitalTwinMemory",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemorySearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MemorySearchResultDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/digitaltwins/memory-search/capability": {
+      "get": {
+        "tags": [
+          "Digital Twins"
+        ],
+        "summary": "Reports whether pgvector is available for scoped vector memory search. Search and index operations return 503 when it is not.",
+        "operationId": "GetDigitalTwinMemorySearchCapability",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemorySearchCapability"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/digitaltwins/memory-search/index": {
+      "post": {
+        "tags": [
+          "Digital Twins"
+        ],
+        "summary": "Creates the HNSW index for scoped vector memory search (idempotent). The dimension must match the stored embedding vectors.",
+        "operationId": "EnsureDigitalTwinMemorySearchIndex",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemorySearchIndexRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemorySearchIndex"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -525,6 +706,40 @@
         }
       }
     },
+    "/relationships": {
+      "post": {
+        "tags": [
+          "Relationships"
+        ],
+        "summary": "Creates or replaces relationships in a batch operation. Payloads larger than 100 items are split internally into chunks; batches above the configurable ceiling (Parameters:MaxBatchSize, default 2000) are rejected with a 400. Larger imports must use an import job.",
+        "operationId": "CreateOrReplaceRelationshipsBatch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/BasicRelationship"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchRelationshipResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/models": {
       "get": {
         "tags": [
@@ -584,6 +799,28 @@
       }
     },
     "/models/{id}": {
+      "get": {
+        "tags": [
+          "Models"
+        ],
+        "summary": "Retrieves a specific model by its ID.",
+        "operationId": "GetModel",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
       "delete": {
         "tags": [
           "Models"
@@ -600,6 +837,62 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Models"
+        ],
+        "summary": "Updates a model by its ID using JSON Patch.",
+        "operationId": "UpdateModel",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JsonPatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/models/search": {
+      "post": {
+        "tags": [
+          "Models"
+        ],
+        "summary": "Searches models using lexical and/or vector similarity.",
+        "operationId": "SearchModels",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelSearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -877,13 +1170,19 @@
         "type": "object",
         "properties": {
           "$relationshipId": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "$targetId": {
             "type": "string"
           },
           "$sourceId": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "$relationshipName": {
             "type": "string"
@@ -893,6 +1192,139 @@
               "null",
               "string"
             ]
+          },
+          "$metadata": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/RelationshipMetadata"
+              }
+            ]
+          }
+        }
+      },
+      "BatchDigitalTwinResult": {
+        "required": [
+          "results"
+        ],
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DigitalTwinOperationResult"
+            }
+          },
+          "successCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "failureCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "hasFailures": {
+            "type": "boolean"
+          }
+        }
+      },
+      "BatchRelationshipResult": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RelationshipOperationResult"
+            }
+          },
+          "successCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "failureCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "hasFailures": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DigitalTwinOperationResult": {
+        "type": "object",
+        "properties": {
+          "digitalTwinId": {
+            "type": "string"
+          },
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "errorMessage": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "DigitalTwinSearchRequest": {
+        "required": [
+          "vector",
+          "embeddingProperty",
+          "modelFilter",
+          "limit"
+        ],
+        "type": "object",
+        "properties": {
+          "vector": {
+            "type": "array",
+            "items": {
+              "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+              "type": [
+                "number",
+                "string"
+              ],
+              "format": "double"
+            }
+          },
+          "embeddingProperty": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "modelFilter": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "limit": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
           }
         }
       },
@@ -976,6 +1408,36 @@
               ],
               "format": "double"
             }
+          },
+          "properties": {
+            "type": [
+              "null",
+              "array"
+            ]
+          },
+          "relationships": {
+            "type": [
+              "null",
+              "array"
+            ]
+          },
+          "components": {
+            "type": [
+              "null",
+              "array"
+            ]
+          },
+          "telemetries": {
+            "type": [
+              "null",
+              "array"
+            ]
+          },
+          "commands": {
+            "type": [
+              "null",
+              "array"
+            ]
           }
         }
       },
@@ -1082,6 +1544,245 @@
       "JsonDocument": {},
       "JsonElement": {},
       "JsonPatch": {},
+      "MemorySearchCapability": {
+        "required": [
+          "vectorSearchAvailable"
+        ],
+        "type": "object",
+        "properties": {
+          "vectorSearchAvailable": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MemorySearchIndex": {
+        "required": [
+          "indexName",
+          "dimension"
+        ],
+        "type": "object",
+        "properties": {
+          "indexName": {
+            "type": "string"
+          },
+          "dimension": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "MemorySearchIndexRequest": {
+        "required": [
+          "embeddingProperty",
+          "dimension",
+          "m",
+          "efConstruction"
+        ],
+        "type": "object",
+        "properties": {
+          "embeddingProperty": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "dimension": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "m": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "efConstruction": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "MemorySearchRequest": {
+        "required": [
+          "vector",
+          "embeddingProperty",
+          "limit",
+          "modelIds",
+          "propertyFilters",
+          "relatedTwinId",
+          "expectedDimension",
+          "excerptLength"
+        ],
+        "type": "object",
+        "properties": {
+          "vector": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+              "type": [
+                "number",
+                "string"
+              ],
+              "format": "double"
+            }
+          },
+          "embeddingProperty": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "limit": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "modelIds": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "propertyFilters": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "relatedTwinId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "expectedDimension": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "excerptLength": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "MemorySearchResultDto": {
+        "required": [
+          "id",
+          "modelId",
+          "distance",
+          "excerpt",
+          "lastUpdatedOn"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "modelId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "distance": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "excerpt": {
+            "type": "string"
+          },
+          "lastUpdatedOn": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "ModelSearchRequest": {
+        "required": [
+          "query",
+          "vector",
+          "limit"
+        ],
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "vector": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+              "type": [
+                "number",
+                "string"
+              ],
+              "format": "double"
+            }
+          },
+          "limit": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
       "PageOfJsonDocument": {
         "type": "object",
         "properties": {
@@ -1172,6 +1873,50 @@
               "null",
               "string"
             ]
+          },
+          "parameters": {
+            "type": [
+              "null",
+              "object"
+            ]
+          }
+        }
+      },
+      "RelationshipMetadata": {
+        "type": "object",
+        "properties": {
+          "$lastUpdatedBy": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "$lastUpdateTime": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "RelationshipOperationResult": {
+        "type": "object",
+        "properties": {
+          "sourceId": {
+            "type": "string"
+          },
+          "relationshipId": {
+            "type": "string"
+          },
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "errorMessage": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       }
@@ -1180,6 +1925,9 @@
   "tags": [
     {
       "name": "Query"
+    },
+    {
+      "name": "AgeDigitalTwins.ApiService"
     },
     {
       "name": "Digital Twins"
